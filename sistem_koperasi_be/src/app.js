@@ -1,0 +1,10 @@
+// D:\MARSTECH\ExpressJS-NextJs-Koperasi\sistem_koperasi_be\src\app.js
+import express from 'express';
+import cors from 'cors';
+
+const app = express();
+
+app.use(express.json());
+app.use(cors());
+
+export default app;
