@@ -12,7 +12,11 @@
     "dotenv": "^17.2.3",
     "js-cookie": "^3.0.5",
     "next": "15.5.4",
+    "primeflex": "^4.0.0",
+    "primeicons": "^7.0.0",
+    "primereact": "^10.9.7",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "sass": "^1.93.2"
   }
 }
