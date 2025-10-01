@@ -5,7 +5,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 
-const FormDialog = ({ visible, onHide, onSubmit, form, setForm, errors, perusahaanOptions }) => {
+const FormDialog = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
@@ -16,7 +16,7 @@ const FormDialog = ({ visible, onHide, onSubmit, form, setForm, errors, perusaha
 
   return (
     <Dialog
-      header={form.Id ? 'Edit Aktivasi M-Pay' : 'Tambah Aktivasi M-Pay'}
+      header={'Edit Aktivasi M-Pay' }
       visible={visible}
       onHide={onHide}
       style={{ width: '50vw' }}
@@ -39,34 +39,7 @@ const FormDialog = ({ visible, onHide, onSubmit, form, setForm, errors, perusaha
             />
             {errors.Nama && <small className="text-red-500">{errors.Nama}</small>}
           </div>
-
-          <div className="mt-2">
-            <label>Kode Perusahaan *</label>
-            <Dropdown
-              className={inputClass('KodePerusahaan')}
-              value={form.KodePerusahaan}
-              options={perusahaanOptions}
-              onChange={(e) => 
-                setForm({ ...form, KodePerusahaan: e.target.value })
-              }
-              placeholder="Pilih kode perusahaan"
-              showClear
-              filter
-            />
-            {errors.KodePerusahaan && <small className="text-red-500">{errors.KodePerusahaan}</small>}
-          </div>
-
-          <div className="mt-2">
-            <label>Kode Unik *</label>
-            <InputText
-              className={inputClass('KodeUnik')}
-              value={form.KodeUnik}
-              onChange={(e) => setForm({ ...form, KodeUnik: e.target.value })}
-              placeholder="Masukkan kode unik"
-            />
-            {errors.KodeUnik && <small className="text-red-500">{errors.KodeUnik}</small>}
-          </div>
-
+          
           <div className="mt-2">
             <label>Kode AO *</label>
             <InputText
@@ -100,17 +73,6 @@ const FormDialog = ({ visible, onHide, onSubmit, form, setForm, errors, perusaha
             {errors.Username && <small className="text-red-500">{errors.Username}</small>}
           </div>
           
-          <div className="mt-2">
-            <label>Password *</label>
-            <InputText
-              className={inputClass('Password')}
-              value={form.Password}
-              onChange={(e) => setForm({ ...form, Password: e.target.value })}
-              placeholder="Masukkan username"
-            />
-            {errors.Password && <small className="text-red-500">{errors.Password}</small>}
-          </div>
-
           <div className="mt-2">
             <label>Status</label>
             <Dropdown

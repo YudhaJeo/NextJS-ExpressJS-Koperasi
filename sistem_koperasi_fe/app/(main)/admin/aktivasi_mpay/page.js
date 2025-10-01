@@ -7,9 +7,6 @@ import TabelData from './components/tabelData';
 import FormDialog from './components/formDialog';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
-import { Dialog } from "primereact/dialog";
-import dynamic from "next/dynamic";
 import FilterTanggal from '@/app/components/filterTanggal';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -20,8 +17,6 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [form, setForm] = useState({ 
     Nama: '', 
-    KodePerusahaan: '', 
-    KodeUnik: '', 
     KodeAo: '', 
     Cabang: '', 
     Username: '', 
@@ -29,19 +24,11 @@ const Page = () => {
   });
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [perusahaanOptions, setPerusahaanOptions] = useState([]);
   const [errors, setErrors] = useState({});
-  const [adjustDialog, setAdjustDialog] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("@/app/components/PDFViewer"), { ssr: false });
-
   const toastRef = useRef(null);
 
   useEffect(() => {
     fetchData();
-    fetchPerusahaan();
   }, []);
 
   const fetchData = async () => {
@@ -57,28 +44,12 @@ const Page = () => {
     }
   };
 
-  const fetchPerusahaan = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/perusahaan`);
-      const options = res.data.data.map((item) => ({
-        label: `${item.KodePerusahaan} - ${item.NamaPerusahaan}`,
-        value: item.KodePerusahaan,
-      }));
-      setPerusahaanOptions(options);
-    } catch (err) {
-      console.error('Gagal ambil data perusahaan:', err);
-    }
-  };
-
   const validateForm = () => {
     const newErrors = {};
     if (!form.Nama.trim()) newErrors.Nama = 'Nama wajib diisi';
-    if (!form.KodePerusahaan.trim()) newErrors.KodePerusahaan = 'Kode Perusahaan wajib diisi';
-    if (!form.KodeUnik.trim()) newErrors.KodeUnik = 'Kode Unik wajib diisi';
     if (!form.KodeAo.trim()) newErrors.KodeAo = 'Kode AO wajib diisi';
     if (!form.Cabang.trim()) newErrors.Cabang = 'Cabang wajib diisi';
     if (!form.Username.trim()) newErrors.Username = 'Username wajib diisi';
-    if (!form.Password.trim()) newErrors.Password = 'Password wajib diisi';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -104,12 +75,9 @@ const Page = () => {
       setDialogVisible(false);
       setForm({ 
         Nama: '', 
-        KodePerusahaan: '', 
-        KodeUnik: '', 
         KodeAo: '', 
         Cabang: '', 
         Username: '', 
-        Password: '', 
         Status: 1 
       });
     } catch (err) {
@@ -192,12 +160,9 @@ const Page = () => {
           onAddClick={() => {
             setForm({ 
               Nama: '', 
-              KodePerusahaan: '', 
-              KodeUnik: '', 
               KodeAo: '', 
               Cabang: '', 
               Username: '', 
-              Password: '', 
               Status: 1 
             });
             setDialogVisible(true);
@@ -220,12 +185,9 @@ const Page = () => {
           setDialogVisible(false);
           setForm({ 
             Nama: '', 
-            KodePerusahaan: '', 
-            KodeUnik: '', 
             KodeAo: '', 
             Cabang: '', 
             Username: '', 
-            Password: '', 
             Status: 1 
           });
         }}
@@ -233,28 +195,8 @@ const Page = () => {
         form={form}
         setForm={setForm}
         errors={errors}
-        perusahaanOptions={perusahaanOptions}
       />
 
-      <AdjustPrintMarginLaporan
-        adjustDialog={adjustDialog}
-        setAdjustDialog={setAdjustDialog}
-        selectedRow={null}
-        data={data}
-        setPdfUrl={setPdfUrl}
-        setFileName={setFileName}
-        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
-      />
-
-      <Dialog
-        visible={jsPdfPreviewOpen}
-        onHide={() => setJsPdfPreviewOpen(false)}
-        modal
-        style={{ width: "90vw", height: "90vh" }}
-        header="Preview PDF"
-      >
-        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
-      </Dialog>
     </div>
   );
 };
