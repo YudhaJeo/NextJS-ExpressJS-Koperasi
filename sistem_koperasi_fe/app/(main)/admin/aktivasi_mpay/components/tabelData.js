@@ -63,6 +63,8 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
       scrollHeight="400px"
       paginatorLeft={paginatorLeft}
       paginatorRight={paginatorRight}
+      sortField="updated_at" 
+      sortOrder={-1}
     >
       <Column field="Id" header="ID" />
       <Column 
