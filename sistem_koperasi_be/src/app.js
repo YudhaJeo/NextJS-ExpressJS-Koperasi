@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
+import aktivasiMpayRoutes from './routes/aktivasiMpayRoutes.js';
 import perusahaanRoutes from './routes/perusahaanRoutes.js';
 import configBiayaAdminRoutes from './routes/configBiayaAdminRoutes.js';
 
@@ -14,6 +15,7 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use('/api/aktivasi_mpay', aktivasiMpayRoutes)
 app.use('/api/perusahaan', perusahaanRoutes)
 app.use('/api/config_biaya_admin', configBiayaAdminRoutes)
 
