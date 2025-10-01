@@ -48,7 +48,7 @@ const FormDialog = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
         </div>
 
         <div className="text-right pt-3">
-          <Button type="submit" label="Simpan" icon="pi pi-save" />
+          <Button type="submit" label="Simpan" className="p-button-outlined" icon="pi pi-save" />
         </div>
       </form>
     </Dialog>

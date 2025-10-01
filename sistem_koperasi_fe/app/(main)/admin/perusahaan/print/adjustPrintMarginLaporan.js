@@ -144,12 +144,14 @@ export default function AdjustPrintMarginLaporan({
         label="Export Excel"
         icon="pi pi-file-excel"
         severity="success"
+        className="p-button-outlined" 
         onClick={exportExcel}
       />
       <Button
         label="Export PDF"
         icon="pi pi-file-pdf"
         severity="danger"
+        className="p-button-outlined" 
         onClick={handleExportPdf}
         loading={loadingExport}
       />
