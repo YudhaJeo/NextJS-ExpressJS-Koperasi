@@ -13,6 +13,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [form, setForm] = useState({ 
@@ -36,6 +37,7 @@ const Page = () => {
     try {
       const res = await axios.get(`${API_URL}/aktivasi_mpay`);
       setData(res.data.data);
+      setOriginalData(res.data.data)
     } catch (err) {
       console.error('Gagal ambil data:', err);
       toastRef.current?.showToast('01', 'Gagal mengambil data');
@@ -115,7 +117,7 @@ const Page = () => {
     if (!startDate && !endDate) return setData(originalData);
 
     const filtered = originalData.filter((item) => {
-      const visitDate = new Date(item.TANGGALMASUK);
+      const visitDate = new Date(item.DateTime);
       const from = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
       const to = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
       return (!from || visitDate >= from) && (!to || visitDate <= to);

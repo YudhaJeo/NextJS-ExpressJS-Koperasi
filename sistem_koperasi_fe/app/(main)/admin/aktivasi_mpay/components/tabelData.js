@@ -5,7 +5,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
-const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
+const TabelData = ({ data, loading, onEdit, onDelete, onRefresh }) => {
   const formatDate = (dateString) => {
     if (!dateString || dateString === '1900-01-01') return '-';
     return new Date(dateString).toLocaleDateString('id-ID');
@@ -38,19 +38,6 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
     </div>
   );
 
-  const paginatorRight = (
-    <div className="flex gap-2">
-      <Button
-        icon="pi pi-print"
-        size="small"
-        severity="warning"
-        onClick={onPrint}
-        tooltip="Cetak Data"
-        className="p-button-outlined"
-      />
-    </div>
-  );
-
   return (
     <DataTable 
       value={data} 
@@ -62,7 +49,6 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
       scrollable
       scrollHeight="400px"
       paginatorLeft={paginatorLeft}
-      paginatorRight={paginatorRight}
       sortField="updated_at" 
       sortOrder={-1}
     >
