@@ -13,9 +13,9 @@ const FilterTanggal = ({ startDate, endDate, setStartDate, setEndDate, handleDat
           onChange={(e) => setStartDate(e.value)}
           dateFormat="yy-mm-dd"
           showIcon
+          className="p-button-outlined w-[160px]"
           placeholder="Mulai"
           style={{ width: '170px', fontSize: '0.875rem' }}
-          className="w-[160px]"
         />
       </div>
       <div>
@@ -27,7 +27,7 @@ const FilterTanggal = ({ startDate, endDate, setStartDate, setEndDate, handleDat
           showIcon
           placeholder="Selesai"
           style={{ width: '170px', fontSize: '0.875rem' }}
-          className="w-[160px]"
+          className="w-[160px] p-button-outlined"
         />
       </div>
       <div>
@@ -36,14 +36,14 @@ const FilterTanggal = ({ startDate, endDate, setStartDate, setEndDate, handleDat
           <Button
             icon="pi pi-check"
             tooltip='Terapkan'
-            className="p-inputtext"
             severity="info"
+            className="p-inputtext p-button-outlined"
             onClick={handleDateFilter}
           />
           <Button
             tooltip='Reset'
             icon="pi pi-times"
-            className="p-inputtext"
+            className="p-inputtext p-button-outlined"
             severity="secondary"
             onClick={resetFilter}
           />
