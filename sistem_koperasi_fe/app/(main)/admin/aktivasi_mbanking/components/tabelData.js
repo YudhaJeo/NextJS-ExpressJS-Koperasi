@@ -1,12 +1,16 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
-const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint, onDeactivate }) => {
+const TabelData = ({ data, loading, onDelete, onRefresh, onToggleStatus }) => {
+
+  const formatDate = (dateString) => {
+    if (!dateString || dateString === '1900-01-01') return '-';
+    return new Date(dateString).toLocaleDateString('id-ID');
+  };
 
   const paginatorLeft = (
     <div className="flex gap-2">
@@ -21,31 +25,19 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint, onDeac
     </div>
   );
 
-  const paginatorRight = (
-    <div className="flex gap-2">
-      <Button
-        icon="pi pi-print"
-        size="small"
-        severity="warning"
-        onClick={onPrint}
-        tooltip="Cetak Data"
-        className="p-button-outlined"
-      />
-    </div>
-  );
-
   return (
-    <DataTable 
-      value={data} 
-      paginator 
-      rows={10} 
-      rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]} 
-      loading={loading} 
+    <DataTable
+      value={data}
+      paginator
+      rows={20}
+      rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}
+      loading={loading}
       size="small"
       scrollable
       scrollHeight="400px"
       paginatorLeft={paginatorLeft}
-      paginatorRight={paginatorRight}
+      sortField="updated_at" 
+      sortOrder={-1}
     >
       <Column field="kode_perusahaan" header="Kode Perusahaan" />
       <Column field="kode_unik" header="Kode Unik" />
@@ -59,32 +51,39 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint, onDeac
         body={(row) => {
           const s = Number(String(row.status).trim());
           if (s === 1) return <Tag value="Aktif" severity="success" />;
-          if (s === 2) return <Tag value="Nonaktif" severity="danger" />;
+          if (s === 0) return <Tag value="Nonaktif" severity="danger" />;
           return <Tag value="Unknown" severity="warning" />;
         }}
       />
       <Column
         header="Aksi"
-        body={(row) => (
-          <div className="flex gap-2">
-            <Button
-              label="Nonaktifkan"
-              size="small"
-              severity="danger"
-              onClick={() => onDeactivate(row)}
-              tooltip="Nonaktifkan"
-            />
-            <Button
-              label="Delete"
-              size="small"
-              severity="danger"
-              onClick={() => onDelete(row)}
-              tooltip="Hapus"
-            />
-          </div>
-        )}
+        body={(row) => {
+          const isActive = String(row.status).trim() === "1";
+          return (
+            <div className="flex gap-2">
+              <Button
+                label={isActive ? "Nonaktifkan" : "Aktifkan"}
+                size="small"
+                severity={isActive ? "danger" : "success"}
+                onClick={() => onToggleStatus(row)}
+                tooltip={isActive ? "Nonaktifkan User" : "Aktifkan User"}
+              />
+              <Button
+                label="Delete"
+                size="small"
+                severity="danger"
+                onClick={() => onDelete(row)}
+                tooltip="Hapus User"
+              />
+            </div>
+          );
+        }}
       />
-      <Column field="datetime" header="Tanggal" />
+      <Column 
+        field="datetime" 
+        header="Tanggal" 
+        body={(rowData) => formatDate(rowData.datetime)}
+        />
     </DataTable>
   );
 };
