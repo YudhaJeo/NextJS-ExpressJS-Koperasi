@@ -22,25 +22,43 @@ const AppMenu = () => {
       {
         items: [
           { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/kasir/dashboard" },
-          { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/" },
+          { label: "Ativasi Mpay", icon: "pi pi-fw pi-circle", to: "/" },
+          {
+            label: "Laporan Mpay",
+            icon: "pi pi-fw pi-list",
+            items: [
+              { label: "Simpanan", icon: "pi pi-fw pi-circle", to: "/" },
+            ],
+          },
+          { label: "Ativasi Mbanking", icon: "pi pi-fw pi-circle", to: "/" },
+          { label: "Config Biaya Admin", icon: "pi pi-fw pi-circle", to: "/" },
+          {
+            label: "Laporan Mbanking",
+            icon: "pi pi-fw pi-list",
+            items: [
+              { label: "History Transaksi", icon: "pi pi-fw pi-circle", to: "/" },
+            ],
+          },
+          { label: "Perusahaan", icon: "pi pi-fw pi-circle", to: "/" },
+          { label: "Users", icon: "pi pi-fw pi-circle", to: "/" },
+          { label: "Role", icon: "pi pi-fw pi-circle", to: "/" },
+          { label: "Profile", icon: "pi pi-fw pi-circle", to: "/" },
         ],
       },
     ];
-  } else if (userRole === "Admin") {
+  } else if (userRole === "admin") {
     model = [
       {
         items: [
-          { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/kasir/dashboard" },
-          { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/" },
+          { label: "Halaman Admin", icon: "pi pi-fw pi-circle", to: "/" },
         ],
       },
     ];
-  } else if (userRole === "Admin") {
+  } else if (userRole === "vendor") {
     model = [
       {
         items: [
-          { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/kasir/dashboard" },
-          { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/" },
+          { label: "Halaman Vendor", icon: "pi pi-fw pi-circle", to: "/" },
         ],
       },
     ];

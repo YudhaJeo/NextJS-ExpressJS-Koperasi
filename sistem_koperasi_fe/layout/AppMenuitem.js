@@ -61,7 +61,8 @@ const AppMenuitem = (props) => {
                         index={i}
                         className={child.badgeClass}
                         parentKey={key}
-                        key={child.label}
+                        key={`${key}-${i}`}
+
                     />
                 ))}
             </ul>

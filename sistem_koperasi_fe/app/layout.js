@@ -8,8 +8,8 @@ import '../styles/demo/Demos.scss';
 import './globals.css';
 
 export const metadata = {
-  title: 'Rumah Sakit',
-  description: 'Sistem Informasi Rumah Sakit',
+  title: 'Dashboard Koperasi',
+  description: 'Sistem Informasi Dashboard Koperasi MarsTech',
 };
 
 export default function RootLayout({ children }) {

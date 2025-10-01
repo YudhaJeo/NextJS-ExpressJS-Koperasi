@@ -82,25 +82,10 @@ const AppTopbar = forwardRef((props, ref) => {
 
                 <Link href="/profile">
                     <button type="button" className="p-link layout-topbar-button">
-                        <Avatar
-                            image={
-                                profile && profile !== "null" && profile !== "undefined"
-                                    ? profile
-                                    : undefined
-                            }
-                            icon={
-                                !profile || profile === "null" || profile === "undefined"
-                                    ? "pi pi-user"
-                                    : undefined
-                            }
-                            className="topbar-avatar"
-                            size="xlarge"
+                        <Avatar 
+                            icon="pi pi-user" 
+                            size="xlarge" 
                             shape="circle"
-                            style={{ objectFit: 'cover', width: '3rem', height: '3rem', background: 'transparent' }}
-                            onImageError={(e) => {
-                                e.target.src = "";
-                                e.target.classList.add("pi", "pi-user");
-                            }}
                         />
                         <span>Profile</span>
                     </button>

@@ -2,9 +2,9 @@ import Layout from '../../layout/layout';
 import Providers from '../providers';
 
 export const metadata = {
-  title: 'Bayza Medika',
+  title: 'Dashboard Koperasi',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/layout/image/marstech-logo.png',
   },
 };
 
