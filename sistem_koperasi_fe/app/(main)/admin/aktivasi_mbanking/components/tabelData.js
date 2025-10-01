@@ -6,6 +6,12 @@ import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
 const TabelData = ({ data, loading, onDelete, onRefresh, onToggleStatus }) => {
+
+  const formatDate = (dateString) => {
+    if (!dateString || dateString === '1900-01-01') return '-';
+    return new Date(dateString).toLocaleDateString('id-ID');
+  };
+
   const paginatorLeft = (
     <div className="flex gap-2">
       <Button
@@ -30,6 +36,8 @@ const TabelData = ({ data, loading, onDelete, onRefresh, onToggleStatus }) => {
       scrollable
       scrollHeight="400px"
       paginatorLeft={paginatorLeft}
+      sortField="updated_at" 
+      sortOrder={-1}
     >
       <Column field="kode_perusahaan" header="Kode Perusahaan" />
       <Column field="kode_unik" header="Kode Unik" />
@@ -71,7 +79,11 @@ const TabelData = ({ data, loading, onDelete, onRefresh, onToggleStatus }) => {
           );
         }}
       />
-      <Column field="datetime" header="Tanggal" />
+      <Column 
+        field="datetime" 
+        header="Tanggal" 
+        body={(rowData) => formatDate(rowData.datetime)}
+        />
     </DataTable>
   );
 };
