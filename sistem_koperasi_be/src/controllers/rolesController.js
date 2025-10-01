@@ -12,13 +12,13 @@ export async function getAllRoles(req, res) {
 
 export async function createRoles(req, res) {
   try {
-    const { name } = req.body;
+    const { name, guard_name } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: 'Nama Role wajib diisi' });
     }
 
-    await Roles.create({ name });
+    await Roles.create({ name, guard_name: guard_name || 'web' });
 
     res.status(201).json({ message: 'Roles berhasil ditambahkan' });
   } catch (err) {
@@ -29,14 +29,18 @@ export async function createRoles(req, res) {
 export async function updateRoles(req, res) {
   try {
     const id = req.params.id;
-    const { name } = req.body;
+    const { name, guard_name } = req.body;
 
     const existing = await Roles.getById(id);
     if (!existing) {
       return res.status(404).json({ error: 'Data Roles tidak ditemukan' });
     }
 
-    await Roles.update(id, { name });
+    await Roles.update(id, { 
+      name, 
+      guard_name: guard_name || existing.guard_name 
+    });
+    
     res.json({ message: 'Roles berhasil diperbarui' });
   } catch (err) {
     res.status(500).json({ error: err.message });

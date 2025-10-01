@@ -20,7 +20,7 @@ const RolesPage = () => {
   const [form, setForm] = useState({ 
     id: '', 
     name: '', 
-    guard_name: 'web' // default guard_name
+    guard_name: 'web' 
   });
   const [errors, setErrors] = useState({});
   const [adjustDialog, setAdjustDialog] = useState(false);
@@ -74,7 +74,7 @@ const RolesPage = () => {
 
       fetchData();
       setDialogVisible(false);
-      setForm({ id: '', name: '', guard_name: 'web' });
+      setForm({ name: ''});
     } catch (err) {
       console.error('Gagal simpan data:', err);
       toastRef.current?.showToast('01', 'Gagal menyimpan data');
