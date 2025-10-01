@@ -25,7 +25,7 @@ const AppMenu = () => {
         },
         { label: "Perusahaan", icon: "pi pi-fw pi-circle", to: "/admin/perusahaan" },
         { label: "Users", icon: "pi pi-fw pi-circle", to: "/admin/users" },
-        { label: "Role", icon: "pi pi-fw pi-circle", to: "/admin/role" },
+        { label: "Roles", icon: "pi pi-fw pi-circle", to: "/admin/roles" },
         { label: "Profile", icon: "pi pi-fw pi-circle", to: "/admin/profile" },
       ],
     },
