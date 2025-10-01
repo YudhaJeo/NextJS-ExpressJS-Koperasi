@@ -12,12 +12,18 @@
     "chart.js": "^4.5.0",
     "dotenv": "^17.2.3",
     "js-cookie": "^3.0.5",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "next": "15.5.4",
+    "pdfjs": "^2.5.4",
+    "pdfjs-dist": "^5.4.149",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.7",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "sass": "^1.93.2"
+    "react-pdf": "^10.1.0",
+    "sass": "^1.93.2",
+    "xlsx": "^0.18.5"
   }
 }
