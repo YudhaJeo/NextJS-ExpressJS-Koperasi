@@ -18,7 +18,7 @@ const HeaderBar = ({ title, placeholder, onSearch, onAddClick }) => {
         </span>
 
         {onAddClick && (
-          <Button label="Tambah" icon="pi pi-plus" onClick={onAddClick} />
+          <Button label="Tambah" className="p-button-outlined" icon="pi pi-plus" onClick={onAddClick} />
         )}
       </div>
     </div>
