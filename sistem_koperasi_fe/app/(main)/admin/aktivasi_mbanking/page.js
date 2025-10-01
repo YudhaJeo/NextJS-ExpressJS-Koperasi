@@ -6,33 +6,12 @@ import HeaderBar from '@/app/components/headerbar';
 import TabelData from './components/tabelData';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
-import { Dialog } from "primereact/dialog";
-import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [dialogVisible, setDialogVisible] = useState(false);
-  const [form, setForm] = useState({ 
-    kode_perusahaan: "",
-    no_hp: "",
-    kode_unik: "", 
-    cif: "", 
-    nik: "", 
-    fullname: "", 
-    datetime: "", 
-    status: "", 
-  });
-  const [errors, setErrors] = useState({});
-  const [adjustDialog, setAdjustDialog] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("@/app/components/PDFViewer"), { ssr: false });
-
   const toastRef = useRef(null);
 
   useEffect(() => {
@@ -42,7 +21,7 @@ const Page = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/aktivasibank`);
+      const res = await axios.get(`${API_URL}/aktivasi_mbanking`);
       setData(res.data.data);
     } catch (err) {
       console.error('Gagal ambil data:', err);
@@ -50,59 +29,6 @@ const Page = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!form.kode_perusahaan.trim()) newErrors.kode_perusahaan = 'Kode Perusahaan wajib diisi';
-    if (!form.no_hp.trim()) newErrors.no_hp = 'Kode Unik wajib diisi';
-    if (!form.kode_unik.trim()) newErrors.kode_unik = 'CIF wajib diisi';
-    if (!form.cif.trim()) newErrors.cif = 'NIK wajib diisi';
-    if (!form.nik.trim()) newErrors.nik = 'Nama wajib diisi';
-    if (!form.fullname.trim()) newErrors.fullname = 'No Telp wajib diisi';
-    if (!form.datetime.trim()) newErrors.datetime = 'Tanggal wajib diisi';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async () => {
-    if (!validateForm()) return;
-
-    const isEdit = !!form.Id;
-    const url = isEdit
-      ? `${API_URL}/aktivasibank/${form.id}`
-      : `${API_URL}/aktivasibank`;
-
-    try {
-      if (isEdit) {
-        await axios.put(url, form);
-        toastRef.current?.showToast('00', 'Data berhasil diperbarui');
-      } else {
-        await axios.post(url, form);
-        toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
-      }
-
-      fetchData();
-      setDialogVisible(false);
-      setForm({ 
-        kode_perusahaan: "",
-        no_hp: "",
-        kode_unik: "", 
-        cif: "", 
-        nik: "", 
-        fullname: "", 
-        datetime: "", 
-        status: "",  
-      });
-    } catch (err) {
-      console.error('Gagal simpan data:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data');
-    }
-  };
-
-  const handleEdit = (row) => {
-    setForm(row);
-    setDialogVisible(true);
   };
 
   const handleDelete = (row) => {
@@ -114,7 +40,7 @@ const Page = () => {
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/aktivasibank/${row.id}`);
+          await axios.delete(`${API_URL}/aktivasi_mbanking/${row.id}`);
           fetchData();
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
@@ -125,14 +51,27 @@ const Page = () => {
     });
   };
 
-  // ✅ Tambahkan fungsi nonaktifkan
   const handleDeactivate = async (row) => {
     try {
-      await axios.put(`${API_URL}/aktivasibank/${row.id}`, {
+      await axios.put(`${API_URL}/aktivasi_mbanking/${row.id}`, {
         ...row,
-        status: "2", // ubah ke nonaktif
+        status: "0", 
       });
       toastRef.current?.showToast('00', `User ${row.fullname} berhasil dinonaktifkan`);
+      fetchData();
+    } catch (err) {
+      console.error('Gagal nonaktifkan data:', err);
+      toastRef.current?.showToast('01', 'Gagal menonaktifkan data');
+    }
+  };
+
+  const handleActivate = async (row) => {
+    try {
+      await axios.put(`${API_URL}/aktivasi_mbanking/${row.id}`, {
+        ...row,
+        status: "1", 
+      });
+      toastRef.current?.showToast('00', `User ${row.fullname} berhasil diaktifkan`);
       fetchData();
     } catch (err) {
       console.error('Gagal nonaktifkan data:', err);
@@ -163,32 +102,13 @@ const Page = () => {
       <TabelData
         data={data}
         loading={loading}
-        onEdit={handleEdit}
         onDelete={handleDelete}
-        onDeactivate={handleDeactivate}   // ✅ kirim ke TabelData
+        onDeactivate={handleDeactivate}
+        onActivate={handleActivate}
         onRefresh={fetchData}
         onPrint={() => setAdjustDialog(true)}
       />
 
-      <AdjustPrintMarginLaporan
-        adjustDialog={adjustDialog}
-        setAdjustDialog={setAdjustDialog}
-        selectedRow={null}
-        data={data}
-        setPdfUrl={setPdfUrl}
-        setFileName={setFileName}
-        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
-      />
-
-      <Dialog
-        visible={jsPdfPreviewOpen}
-        onHide={() => setJsPdfPreviewOpen(false)}
-        modal
-        style={{ width: "90vw", height: "90vh" }}
-        header="Preview PDF"
-      >
-        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
-      </Dialog>
     </div>
   );
 };
