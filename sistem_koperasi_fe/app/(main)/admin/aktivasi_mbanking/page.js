@@ -51,32 +51,37 @@ const Page = () => {
     });
   };
 
-  const handleDeactivate = async (row) => {
-    try {
-      await axios.put(`${API_URL}/aktivasi_mbanking/${row.id}`, {
-        ...row,
-        status: "0", 
-      });
-      toastRef.current?.showToast('00', `User ${row.fullname} berhasil dinonaktifkan`);
-      fetchData();
-    } catch (err) {
-      console.error('Gagal nonaktifkan data:', err);
-      toastRef.current?.showToast('01', 'Gagal menonaktifkan data');
-    }
-  };
+  const handleToggleStatus = (row) => {
+    const isActive = String(row.status).trim() === "1";
+    const newStatus = isActive ? "0" : "1";
+    const actionText = isActive ? "menonaktifkan" : "mengaktifkan";
 
-  const handleActivate = async (row) => {
-    try {
-      await axios.put(`${API_URL}/aktivasi_mbanking/${row.id}`, {
-        ...row,
-        status: "1", 
-      });
-      toastRef.current?.showToast('00', `User ${row.fullname} berhasil diaktifkan`);
-      fetchData();
-    } catch (err) {
-      console.error('Gagal nonaktifkan data:', err);
-      toastRef.current?.showToast('01', 'Gagal menonaktifkan data');
-    }
+    confirmDialog({
+      message: `Yakin ingin ${actionText} user '${row.fullname}'?`,
+      header: 'Konfirmasi Status',
+      icon: 'pi pi-question-circle',
+      acceptLabel: 'Ya',
+      rejectLabel: 'Batal',
+      accept: async () => {
+        try {
+          await axios.put(`${API_URL}/aktivasi_mbanking/${row.id}`, {
+            ...row,
+            status: newStatus,
+          });
+          toastRef.current?.showToast(
+            '00',
+            `User ${row.fullname} berhasil ${actionText}`
+          );
+          fetchData();
+        } catch (err) {
+          console.error(`Gagal ${actionText} data:`, err);
+          toastRef.current?.showToast(
+            '01',
+            `Gagal ${actionText} user ${row.fullname}`
+          );
+        }
+      },
+    });
   };
 
   return (
@@ -103,12 +108,9 @@ const Page = () => {
         data={data}
         loading={loading}
         onDelete={handleDelete}
-        onDeactivate={handleDeactivate}
-        onActivate={handleActivate}
+        onToggleStatus={handleToggleStatus}
         onRefresh={fetchData}
-        onPrint={() => setAdjustDialog(true)}
       />
-
     </div>
   );
 };

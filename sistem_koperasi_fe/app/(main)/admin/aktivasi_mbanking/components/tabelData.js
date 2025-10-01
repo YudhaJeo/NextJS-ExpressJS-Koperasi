@@ -5,8 +5,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
-const TabelData = ({ data, loading, onDelete, onRefresh, onDeactivate }) => {
-
+const TabelData = ({ data, loading, onDelete, onRefresh, onToggleStatus }) => {
   const paginatorLeft = (
     <div className="flex gap-2">
       <Button
@@ -21,12 +20,12 @@ const TabelData = ({ data, loading, onDelete, onRefresh, onDeactivate }) => {
   );
 
   return (
-    <DataTable 
-      value={data} 
-      paginator 
-      rows={20} 
-      rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]} 
-      loading={loading} 
+    <DataTable
+      value={data}
+      paginator
+      rows={20}
+      rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}
+      loading={loading}
       size="small"
       scrollable
       scrollHeight="400px"
@@ -44,30 +43,33 @@ const TabelData = ({ data, loading, onDelete, onRefresh, onDeactivate }) => {
         body={(row) => {
           const s = Number(String(row.status).trim());
           if (s === 1) return <Tag value="Aktif" severity="success" />;
-          if (s === 2) return <Tag value="Nonaktif" severity="danger" />;
+          if (s === 0) return <Tag value="Nonaktif" severity="danger" />;
           return <Tag value="Unknown" severity="warning" />;
         }}
       />
       <Column
         header="Aksi"
-        body={(row) => (
-          <div className="flex gap-2">
-            <Button
-              label="Nonaktifkan"
-              size="small"
-              severity="danger"
-              onClick={() => onDeactivate(row)}
-              tooltip="Nonaktifkan"
-            />
-            <Button
-              label="Delete"
-              size="small"
-              severity="danger"
-              onClick={() => onDelete(row)}
-              tooltip="Hapus"
-            />
-          </div>
-        )}
+        body={(row) => {
+          const isActive = String(row.status).trim() === "1";
+          return (
+            <div className="flex gap-2">
+              <Button
+                label={isActive ? "Nonaktifkan" : "Aktifkan"}
+                size="small"
+                severity={isActive ? "danger" : "success"}
+                onClick={() => onToggleStatus(row)}
+                tooltip={isActive ? "Nonaktifkan User" : "Aktifkan User"}
+              />
+              <Button
+                label="Delete"
+                size="small"
+                severity="danger"
+                onClick={() => onDelete(row)}
+                tooltip="Hapus User"
+              />
+            </div>
+          );
+        }}
       />
       <Column field="datetime" header="Tanggal" />
     </DataTable>
