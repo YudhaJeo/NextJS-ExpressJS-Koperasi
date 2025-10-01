@@ -5,6 +5,8 @@ import aktivasiMpayRoutes from './routes/aktivasiMpayRoutes.js';
 import perusahaanRoutes from './routes/perusahaanRoutes.js';
 import configBiayaAdminRoutes from './routes/configBiayaAdminRoutes.js';
 import aktivasiMbankingRoutes from './routes/aktivasiMbankingRoutes.js';
+import aktivasibankRoutes from './routes/aktivasibankRoutes.js';
+import simpananRoutes from './routes/simpananRoutes.js';
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -20,5 +22,7 @@ app.use('/api/aktivasi_mpay', aktivasiMpayRoutes)
 app.use('/api/perusahaan', perusahaanRoutes)
 app.use('/api/config_biaya_admin', configBiayaAdminRoutes)
 app.use('/api/aktivasi_mbanking', aktivasiMbankingRoutes)
+app.use('/api/aktivasibank', aktivasibankRoutes)
+app.use('/api/simpanan', simpananRoutes)
 
 export default app;
