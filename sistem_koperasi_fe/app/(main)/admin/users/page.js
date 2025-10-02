@@ -1,0 +1,206 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import HeaderBar from '@/app/components/headerbar';
+import TabelData from './components/tabelUsers';
+import FormDialogUser from './components/formDialog';
+import ToastNotifier from '@/app/components/toastNotifier';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+const UsersPage = () => {
+  const [data, setData] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [perusahaan, setPerusahaan] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [form, setForm] = useState({
+    id: '',
+    name: '',
+    email: '',
+    password: '',
+    role: '',
+    kode_perusahaan: '',
+    aktivasi: 1
+  });
+  const [errors, setErrors] = useState({});
+  const toastRef = useRef(null);
+
+  useEffect(() => {
+    fetchData();
+    fetchRoles();
+    fetchPerusahaan();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/users`);
+      setData(res.data.data);
+    } catch (err) {
+      console.error('Gagal ambil data:', err);
+      toastRef.current?.showToast('01', 'Gagal mengambil data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchRoles = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/roles`);
+      setRoles(res.data.data);
+    } catch (err) {
+      console.error('Gagal ambil role:', err);
+    }
+  };
+
+  const fetchPerusahaan = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/perusahaan`);
+      setPerusahaan(res.data.data);
+    } catch (err) {
+      console.error('Gagal ambil perusahaan:', err);
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!form.name.trim()) newErrors.name = 'Nama wajib diisi';
+    if (!form.email.trim()) newErrors.email = 'Email wajib diisi';
+    if (!form.password && !form.id) newErrors.password = 'Password wajib diisi';
+    if (!form.role) newErrors.role = 'Role wajib dipilih';
+    if (!form.kode_perusahaan) newErrors.kode_perusahaan = 'Kode perusahaan wajib dipilih';
+    if (!form.aktivasi) newErrors.aktivasi = 'Status aktivasi wajib dipilih';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    const isEdit = !!form.id;
+    const url = isEdit
+      ? `${API_URL}/users/${form.id}`
+      : `${API_URL}/users`;
+
+    try {
+      if (isEdit) {
+        await axios.put(url, form);
+        toastRef.current?.showToast('00', 'User berhasil diperbarui');
+      } else {
+        await axios.post(url, form);
+        toastRef.current?.showToast('00', 'User berhasil ditambahkan');
+      }
+
+      fetchData();
+      setDialogVisible(false);
+      setForm({
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        role: '',
+        kode_perusahaan: '',
+        aktivasi: 1
+      });
+    } catch (err) {
+      console.error('Gagal simpan data:', err);
+      toastRef.current?.showToast('01', 'Gagal menyimpan data');
+    }
+  };
+
+  const handleEdit = (row) => {
+    setForm({
+      ...row,
+      password: '' 
+    });
+    setDialogVisible(true);
+  };
+
+  const handleDelete = (row) => {
+    confirmDialog({
+      message: `Yakin hapus user '${row.name}'?`,
+      header: 'Konfirmasi Hapus',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Ya',
+      rejectLabel: 'Batal',
+      accept: async () => {
+        try {
+          await axios.delete(`${API_URL}/users/${row.id}`);
+          fetchData();
+          toastRef.current?.showToast('00', 'User berhasil dihapus');
+        } catch (err) {
+          console.error('Gagal hapus data:', err);
+          toastRef.current?.showToast('01', 'Gagal menghapus data');
+        }
+      },
+    });
+  };
+
+  return (
+    <div className="card">
+      <ToastNotifier ref={toastRef} />
+      <ConfirmDialog />
+
+      <h3 className="text-xl font-semibold mb-3">Master Data Users</h3>
+
+      <HeaderBar
+        title=""
+        placeholder="Cari user"
+        onSearch={(keyword) => {
+          if (!keyword) return fetchData();
+          const filtered = data.filter((item) =>
+            item.name.toLowerCase().includes(keyword.toLowerCase())
+          );
+          setData(filtered);
+        }}
+        onAddClick={() => {
+          setForm({
+            id: '',
+            name: '',
+            email: '',
+            password: '',
+            role: '',
+            kode_perusahaan: '',
+            aktivasi: 1
+          });
+          setDialogVisible(true);
+        }}
+      />
+
+      <TabelData
+        data={data}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        onRefresh={fetchData}
+      />
+
+      <FormDialogUser
+        visible={dialogVisible}
+        onHide={() => {
+          setDialogVisible(false);
+          setForm({
+            id: '',
+            name: '',
+            email: '',
+            password: '',
+            role: '',
+            kode_perusahaan: '',
+            aktivasi: 1
+          });
+        }}
+        onSubmit={handleSubmit}
+        form={form}
+        setForm={setForm}
+        errors={errors}
+        roleOptions={roles}
+        perusahaanOptions={perusahaan}
+      />
+    </div>
+  );
+};
+
+export default UsersPage;
