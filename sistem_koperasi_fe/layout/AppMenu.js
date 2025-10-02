@@ -21,7 +21,7 @@ const AppMenu = () => {
         {
           label: "Laporan Mbanking",
           icon: "pi pi-fw pi-list",
-          items: [{ label: "History Transaksi", icon: "pi pi-fw pi-circle", to: "/admin/laporan_mbanking/history_transaksi" }],
+          items: [{ label: "History Transaksi", icon: "pi pi-fw pi-circle", to: "/admin/laporan_mbanking" }],
         },
         { label: "Perusahaan", icon: "pi pi-fw pi-circle", to: "/admin/perusahaan" },
         { label: "Users", icon: "pi pi-fw pi-circle", to: "/admin/users" },
