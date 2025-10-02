@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import HeaderBar from '@/app/components/headerbar';
+import HeaderBar from '../../../components/headerbar';
 import TabelData from './components/tabelData';
 import FormDialog from './components/formDialog';
-import ToastNotifier from '@/app/components/toastNotifier';
+import ToastNotifier from '../../..//components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import FilterTanggal from '@/app/components/filterTanggal';
+import FilterTanggal from '../../../components/filterTanggal';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
