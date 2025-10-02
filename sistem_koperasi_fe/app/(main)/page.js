@@ -8,6 +8,7 @@ import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import axios from 'axios';
 
 export default function Dashboard() {
   const [cards, setCards] = useState([]);
@@ -20,10 +21,12 @@ export default function Dashboard() {
   const [mutasiData, setMutasiData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/dashboard');
+      const res = await fetch(`${API_URL}/dashboard`);
       const data = await res.json();
 
       // Cards
@@ -58,16 +61,16 @@ export default function Dashboard() {
   }, []);
 
   const statusBody = (row) => {
-    if (!row.Status) return <Tag severity="secondary" value="-" />;
-    switch (row.Status) {
+    if (!row.status) return <Tag severity="secondary" value="-" />;
+    switch (row.status) {
       case 'Selesai':
-        return <Tag severity="success" value={row.Status} />;
+        return <Tag severity="success" value={row.status} />;
       case 'Proses':
-        return <Tag severity="info" value={row.Status} />;
+        return <Tag severity="info" value={row.status} />;
       case 'Batal':
-        return <Tag severity="danger" value={row.Status} />;
+        return <Tag severity="danger" value={row.status} />;
       default:
-        return <Tag severity="secondary" value={row.Status} />;
+        return <Tag severity="secondary" value={row.status} />;
     }
   };
 
@@ -112,12 +115,11 @@ export default function Dashboard() {
             responsiveLayout="scroll"
             emptyMessage="Tidak ada data user"
           >
-            <Column field="Id" header="ID" />
-            <Column field="Nama" header="Nama" />
-            <Column field="Username" header="Username" />
-            <Column field="Cabang" header="Cabang" />
-            <Column field="Status" header="Status" body={statusBody} />
-            <Column field="DateTime" header="Tanggal Daftar" />
+            <Column field="id" header="No" />
+            <Column field="name" header="Nama" />
+            <Column field="kode_perusahaan" header="Cabang" />
+            <Column field="status" header="Status" body={statusBody} />
+            <Column field="created_at" header="Tanggal Daftar" />
           </DataTable>
         </Card>
       </div>
@@ -141,13 +143,17 @@ export default function Dashboard() {
           >
             <Column field="Tgl" header="Tanggal" />
             <Column field="Faktur" header="Faktur" />
-            <Column field="Nama" header="Nama" />
+            <Column field="UserName" header="Nama" />
             <Column field="Rekening" header="Rekening" />
-            <Column field="DK" header="D/K" />
             <Column
-              field="Nominal"
+              field="DK"
+              header="Debit/Kredit"
+              body={(row) => (row.DK === 'D' ? 'Debit' : row.DK === 'K' ? 'Kredit' : row.DK)}
+            />
+            <Column
+              field="Jumlah"
               header="Nominal"
-              body={(row) => `Rp ${Number(row.Nominal).toLocaleString('id-ID')}`}
+              body={(row) => `Rp ${Number(row.Jumlah).toLocaleString('id-ID')}`}
             />
           </DataTable>
         </Card>
@@ -166,7 +172,7 @@ export default function Dashboard() {
           >
             <Column field="Tgl" header="Tanggal" />
             <Column field="Faktur" header="Faktur" />
-            <Column field="Nama" header="Nama" />
+            <Column field="UserName" header="Nama" />
             <Column field="Rekening" header="Rekening" />
             <Column
               field="Jumlah"
