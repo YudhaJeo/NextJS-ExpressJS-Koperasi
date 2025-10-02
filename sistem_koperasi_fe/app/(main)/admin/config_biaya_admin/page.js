@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import HeaderBar from '@/app/components/headerbar';
+import HeaderBar from '../../..//components/headerbar';
 import TabelConfigBiayaAdmin from './components/tabelConfigBiayaAdmin';
 import FormDialogConfigBiayaAdmin from './components/formDialogConfigBiayaAdmin';
-import ToastNotifier from '@/app/components/toastNotifier';
+import ToastNotifier from '../../..//components/toastNotifier';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
