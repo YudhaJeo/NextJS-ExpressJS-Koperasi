@@ -104,11 +104,23 @@ const Page = () => {
       />
     </div>
 
-      <div className="flex justify-between mb-3">
-        <span>Total Setoran: {totalSetoran.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</span>
-        <span>Total Penarikan: {totalPenarikan.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</span>
-        <span>Total Mutasi: {totalMutasi.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</span>
-      </div>
+      <div className="flex justify-between mb-2">
+      <span className="font-semibold">
+        Total Setoran:{" "}
+        {totalSetoran.toLocaleString("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        })}
+      </span>
+
+      <span className="font-semibold">
+        Total Penarikan:{" "}
+        {totalPenarikan.toLocaleString("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        })}
+      </span>
+    </div>
 
       <TabelSimpanan
         data={data}

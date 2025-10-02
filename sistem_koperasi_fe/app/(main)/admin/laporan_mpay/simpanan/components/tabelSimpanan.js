@@ -3,8 +3,10 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { ColumnGroup } from 'primereact/columngroup';
+import { Row } from 'primereact/row';
 
-const TabelSimpanan = ({ data, loading, onRefresh, onPrint }) => {
+const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalMutasi }) => {
   const paginatorLeft = (
     <div className="flex gap-2">
       <Button
@@ -49,6 +51,22 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint }) => {
     return `Rp. ${formatted}`;
   };
 
+   const footerGroup = (
+  <ColumnGroup>
+    <Row>
+      <Column footer="" colSpan={4} /> {}
+      <Column footer="Total Mutasi" style={{ fontWeight: "bold", textAlign: "right" }} />
+      <Column
+        footer={totalMutasi.toLocaleString("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        })}
+        style={{ fontWeight: "bold", textAlign: "left" }}
+      />
+    </Row>
+  </ColumnGroup>
+);
+
   return (
     <DataTable
       value={data}
@@ -61,6 +79,7 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint }) => {
       scrollHeight="400px"
       paginatorLeft={paginatorLeft}
       paginatorRight={paginatorRight}
+      footerColumnGroup={footerGroup}
     >
       <Column field="Tgl" header="Tanggal" body={dateTemplate} />
       <Column field="Faktur" header="Faktur" />
