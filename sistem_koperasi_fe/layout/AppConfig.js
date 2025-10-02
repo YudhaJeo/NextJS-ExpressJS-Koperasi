@@ -76,33 +76,6 @@ const AppConfig = (props) => {
                             </div>
                             <Button icon="pi pi-plus" type="button" onClick={incrementScale} rounded text className="w-2rem h-2rem ml-2" disabled={layoutConfig.scale === scales[scales.length - 1]}></Button>
                         </div>
-
-                        <h5>Menu Type</h5>
-                        <div className="flex">
-                            <div className="field-radiobutton flex-1">
-                                <RadioButton name="menuMode" value={'static'} checked={layoutConfig.menuMode === 'static'} onChange={(e) => changeMenuMode(e)} inputId="mode1"></RadioButton>
-                                <label htmlFor="mode1">Static</label>
-                            </div>
-                            <div className="field-radiobutton flex-1">
-                                <RadioButton name="menuMode" value={'overlay'} checked={layoutConfig.menuMode === 'overlay'} onChange={(e) => changeMenuMode(e)} inputId="mode2"></RadioButton>
-                                <label htmlFor="mode2">Overlay</label>
-                            </div>
-                        </div>
-
-                        <h5>Input Style</h5>
-                        <div className="flex">
-                            <div className="field-radiobutton flex-1">
-                                <RadioButton name="inputStyle" value={'outlined'} checked={layoutConfig.inputStyle === 'outlined'} onChange={(e) => changeInputStyle(e)} inputId="outlined_input"></RadioButton>
-                                <label htmlFor="outlined_input">Outlined</label>
-                            </div>
-                            <div className="field-radiobutton flex-1">
-                                <RadioButton name="inputStyle" value={'filled'} checked={layoutConfig.inputStyle === 'filled'} onChange={(e) => changeInputStyle(e)} inputId="filled_input"></RadioButton>
-                                <label htmlFor="filled_input">Filled</label>
-                            </div>
-                        </div>
-
-                        <h5>Ripple Effect</h5>
-                        <InputSwitch checked={!!layoutConfig.ripple} onChange={changeRipple} />
                     </>
                 )}
                 <h5>PrimeOne Design</h5>

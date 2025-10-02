@@ -9,10 +9,8 @@ export const metadata = {
 
 export default function SimpleLayout({ children }) {
     return (
-        <PrimeReactProvider>
             <React.Fragment>
                 {children}
             </React.Fragment>
-        </PrimeReactProvider>
     );
 }   
