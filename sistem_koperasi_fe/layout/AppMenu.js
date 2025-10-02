@@ -10,23 +10,23 @@ const AppMenu = () => {
     {
       items: [
         { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/" },
-        { label: "Ativasi Mpay", icon: "pi pi-fw pi-circle", to: "/admin/aktivasi_mpay" },
+        { label: "Ativasi Mpay", icon: "pi pi-fw pi-credit-card", to: "/admin/aktivasi_mpay" },
         {
           label: "Laporan Mpay",
           icon: "pi pi-fw pi-list",
-          items: [{ label: "Simpanan", icon: "pi pi-fw pi-circle", to: "/admin/laporan_mpay/simpanan" }],
+          items: [{ label: "Simpanan", icon: "pi pi-fw pi-money-bill", to: "/admin/laporan_mpay/simpanan" }],
         },
-        { label: "Ativasi Mbanking", icon: "pi pi-fw pi-circle", to: "/admin/aktivasi_mbanking" },
-        { label: "Config Biaya Admin", icon: "pi pi-fw pi-circle", to: "/admin/config_biaya_admin" },
+        { label: "Ativasi Mbanking", icon: "pi pi-fw pi-credit-card", to: "/admin/aktivasi_mbanking" },
+        { label: "Config Biaya Admin", icon: "pi pi-fw pi-wallet", to: "/admin/config_biaya_admin" },
         {
           label: "Laporan Mbanking",
           icon: "pi pi-fw pi-list",
-          items: [{ label: "History Transaksi", icon: "pi pi-fw pi-circle", to: "/admin/laporan_mbanking/history_transaksi" }],
+          items: [{ label: "History Transaksi", icon: "pi pi-fw pi-history", to: "/admin/laporan_mbanking/history_transaksi" }],
         },
-        { label: "Perusahaan", icon: "pi pi-fw pi-circle", to: "/admin/perusahaan" },
-        { label: "Users", icon: "pi pi-fw pi-circle", to: "/admin/users" },
-        { label: "Roles", icon: "pi pi-fw pi-circle", to: "/admin/roles" },
-        { label: "Profile", icon: "pi pi-fw pi-circle", to: "/admin/profile" },
+        { label: "Perusahaan", icon: "pi pi-fw pi-building-columns", to: "/admin/perusahaan" },
+        { label: "Users", icon: "pi pi-fw pi-user", to: "/admin/users" },
+        { label: "Roles", icon: "pi pi-fw pi-users", to: "/admin/roles" },
+        { label: "Profile", icon: "pi pi-fw pi-user-edit", to: "/admin/profile" },
       ],
     },
   ];
