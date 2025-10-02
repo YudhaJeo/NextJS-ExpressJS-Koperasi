@@ -52,7 +52,7 @@ export default function AdjustPrintMarginLaporan({
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 5, { align: 'center' });
+    doc.text('Koperasi', pageWidth / 2, marginTop + 5, { align: 'center' });
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
@@ -85,44 +85,71 @@ export default function AdjustPrintMarginLaporan({
   };
   
   async function exportPDF(adjustConfig) {
-    const doc = new jsPDF({
-      orientation: adjustConfig.orientation,
-      unit: 'mm',
-      format: adjustConfig.paperSize,
-    });
+  const doc = new jsPDF({
+    orientation: adjustConfig.orientation,
+    unit: 'mm',
+    format: adjustConfig.paperSize,
+  });
 
-    const marginLeft = parseFloat(adjustConfig.marginLeft);
-    const marginTop = parseFloat(adjustConfig.marginTop);
-    const marginRight = parseFloat(adjustConfig.marginRight);
+  const marginLeft = parseFloat(adjustConfig.marginLeft);
+  const marginTop = parseFloat(adjustConfig.marginTop);
+  const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const startY = addHeader(doc, 'Perusahaan', marginLeft, marginTop, marginRight);
+  const startY = addHeader(doc, 'Laporan Mbanking', marginLeft, marginTop, marginRight);
 
-    autoTable(doc, {
-      startY: startY,
-      head: [[
-        'ID', 
-        'Kode Perusahaan', 
-        'Nama Perusahaan'
-      ]],
-      body: data.map((item) => [
-        item.Id,
-        item.KodePerusahaan,
-        item.NamaPerusahaan,
-      ]),
-      margin: { left: marginLeft, right: marginRight },
-      styles: { fontSize: 9, cellPadding: 2 },
-      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-      alternateRowStyles: { fillColor: [248, 249, 250] },
-    });
+  const totalDebit = data
+    .filter((item) => item.DK === 'D')
+    .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
-    return doc.output('datauristring');
-  }
+  const totalKredit = data
+    .filter((item) => item.DK === 'K')
+    .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
+
+  autoTable(doc, {
+    startY: startY,
+    head: [[
+      'No',
+      'Nama',
+      'Tanggal',
+      'Faktur',
+      'Rekening',
+      'Debit/Kredit',
+      'Jumlah',
+    ]],
+    body: data.map((item, idx) => [
+      idx + 1,
+      item.UserName,
+      item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
+      item.Faktur,
+      item.Rekening,
+      item.DK,
+      item.Jumlah
+        ? item.Jumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+        : '-',
+    ]),
+    foot: [[
+      { content: 'Total Saldo Debit', colSpan: 5, styles: { halign: 'right', fontStyle: 'bold' } },
+      { content: totalDebit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }), styles: { halign: 'right', fontStyle: 'bold' } },
+    ], [
+      { content: 'Total Saldo Kredit', colSpan: 5, styles: { halign: 'right', fontStyle: 'bold' } },
+      { content: totalKredit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }), styles: { halign: 'right', fontStyle: 'bold' } },
+    ]],
+    margin: { left: marginLeft, right: marginRight },
+    styles: { fontSize: 9, cellPadding: 2 },
+    headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+    alternateRowStyles: { fillColor: [248, 249, 250] },
+    footStyles: { fillColor: [230, 230, 230], textColor: 20, fontStyle: 'bold' },
+  });
+
+  return doc.output('datauristring');
+}
+
 
   const exportExcel = () => {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Perusahaan');
-    XLSX.writeFile(wb, 'Perusahaan.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Laporan Mbanking');
+    XLSX.writeFile(wb, 'Laporan Mbanking.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -130,7 +157,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Perusahaan');
+      setFileName('Laporan Mbanking');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {

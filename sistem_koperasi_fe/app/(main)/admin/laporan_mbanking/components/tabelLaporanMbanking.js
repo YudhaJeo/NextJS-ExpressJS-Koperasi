@@ -34,10 +34,14 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
   );
 
   const dateTemplate = (rowData) => {
-    if (!rowData.Tgl) return '-';
+    if (!rowData.Tgl) return "-";
     const date = new Date(rowData.Tgl);
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
   };
+
 
   const rupiahTemplate = (rowData) => {
     if (rowData.Jumlah == null) return '-';
@@ -48,7 +52,6 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
     return `Rp. ${formatted}`;
   };
 
-  // 👇 ColumnGroup footer, sejajarkan debit kiri – kredit kanan
   const footerGroup = (
     <ColumnGroup>
       <Row>
@@ -69,7 +72,7 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
               </span>
             </div>
           }
-          colSpan={8} // gabungkan seluruh kolom agar rapi
+          colSpan={8}
         />
       </Row>
     </ColumnGroup>
@@ -87,7 +90,7 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
       scrollHeight="400px"
       paginatorLeft={paginatorLeft}
       paginatorRight={paginatorRight}
-      footerColumnGroup={footerGroup} // ✅ pakai footer di bawah tabel
+      footerColumnGroup={footerGroup}
     >
       <Column field="Tgl" header="Tanggal" body={dateTemplate} />
       <Column field="Faktur" header="Faktur" />

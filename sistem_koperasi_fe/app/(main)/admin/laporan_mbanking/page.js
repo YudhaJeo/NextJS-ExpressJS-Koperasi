@@ -8,7 +8,6 @@ import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
-import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,7 +18,6 @@ const Page = () => {
   const [pdfUrl, setPdfUrl] = useState("");
   const [fileName, setFileName] = useState("");
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("@/app/components/PDFViewer"), { ssr: false });
   const toastRef = useRef(null);
 
   useEffect(() => {
@@ -52,7 +50,7 @@ const Page = () => {
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
 
-      <h3 className="text-xl font-semibold mb-3">Laporan History</h3>
+      <h3 className="text-xl font-semibold mb-3">History Transaksi</h3>
 
       <HeaderBar
         title=""
@@ -86,15 +84,22 @@ const Page = () => {
         setFileName={setFileName}
         setJsPdfPreviewOpen={setJsPdfPreviewOpen}
       />
-
       <Dialog
         visible={jsPdfPreviewOpen}
         onHide={() => setJsPdfPreviewOpen(false)}
         modal
         style={{ width: "90vw", height: "90vh" }}
-        header="Preview PDF"
+        header={`Preview PDF - ${fileName}`}
       >
-        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+        {pdfUrl ? (
+          <iframe
+            src={pdfUrl}
+            title="PDF Preview"
+            style={{ width: "100%", height: "80vh", border: "none" }}
+          />
+        ) : (
+          <p>PDF belum tersedia</p>
+        )}
       </Dialog>
     </div>
   );
