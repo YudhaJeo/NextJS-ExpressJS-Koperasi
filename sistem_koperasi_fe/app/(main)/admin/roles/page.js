@@ -7,6 +7,7 @@ import TabelData from './components/tabelRoles';
 import FormDialog from './components/formDialog';
 import ToastNotifier from '../../../components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
 import dynamic from "next/dynamic";
 
@@ -149,7 +150,7 @@ const RolesPage = () => {
         errors={errors}
       />
 
-      {/* <AdjustPrintMarginLaporan
+      <AdjustPrintMarginLaporan
         adjustDialog={adjustDialog}
         setAdjustDialog={setAdjustDialog}
         selectedRow={null}
@@ -164,10 +165,18 @@ const RolesPage = () => {
         onHide={() => setJsPdfPreviewOpen(false)}
         modal
         style={{ width: "90vw", height: "90vh" }}
-        header="Preview PDF"
+        header={`Preview PDF - ${fileName}`}
       >
-        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
-      </Dialog> */}
+        {pdfUrl ? (
+          <iframe
+            src={pdfUrl}
+            title="PDF Preview"
+            style={{ width: "100%", height: "80vh", border: "none" }}
+          />
+        ) : (
+          <p>PDF belum tersedia</p>
+        )}
+      </Dialog>
     </div>
   );
 };
