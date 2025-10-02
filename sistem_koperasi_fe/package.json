@@ -25,5 +25,9 @@
     "react-pdf": "^10.1.0",
     "sass": "^1.93.2",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "24.6.2",
+    "typescript": "5.9.3"
   }
 }

@@ -1,17 +1,23 @@
+// D:\MARSTECH\ExpressJS-NextJs-Koperasi\sistem_koperasi_fe\app\(main)\layout.js
 import Layout from '../../layout/layout';
-import Providers from '../providers';
+import { PrimeReactProvider } from 'primereact/api';
+
 
 export const metadata = {
   title: 'Dashboard Koperasi',
   icons: {
-    icon: '/layout/image/marstech-logo.png',
+    icon: '/layout/marstech-logo.png',
   },
 };
 
 export default function AppLayout({ children }) {
   return (
-    <Providers>
-      <Layout>{children}</Layout>
-    </Providers>
+    <body>
+      <PrimeReactProvider>
+          <Layout>
+            {children}
+          </Layout>
+      </PrimeReactProvider>
+    </body>
   );
 }

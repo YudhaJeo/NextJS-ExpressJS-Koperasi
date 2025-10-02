@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import HeaderBar from '@/app/components/headerbar';
+import HeaderBar from '../../..//components/headerbar';
 import TabelSimpanan from './components/tabelSimpanan';
-import ToastNotifier from '@/app/components/toastNotifier';
+import ToastNotifier from '../../..//components/toastNotifier';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
@@ -21,7 +21,7 @@ const Page = () => {
   const [pdfUrl, setPdfUrl] = useState("");
   const [fileName, setFileName] = useState("");
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("@/app/components/PDFViewer"), { ssr: false });
+  const PDFViewer = dynamic(() => import("../../..//components/PDFViewer"), { ssr: false });
   const toastRef = useRef(null);
 
   const [startDate, setStartDate] = useState(null);
