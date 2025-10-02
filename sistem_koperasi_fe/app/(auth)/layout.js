@@ -1,4 +1,3 @@
-// D:\MARSTECH\ExpressJS-NextJs-Koperasi\sistem_koperasi_fe\app\(auth)\layout.js
 import { PrimeReactProvider } from 'primereact/api';
 import React from 'react';
 

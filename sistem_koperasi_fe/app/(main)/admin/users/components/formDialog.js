@@ -18,7 +18,6 @@ const FormDialogUser = ({
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
-  // Dropdown Aktivasi
   const aktivasiOptions = [
     { label: 'Aktif', value: 1 },
     { label: 'Tidak Aktif', value: 2 },

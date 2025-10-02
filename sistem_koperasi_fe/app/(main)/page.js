@@ -7,7 +7,6 @@ import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
 
 export default function Dashboard() {
-  // dummy data chart
   const barData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei'],
     datasets: [
@@ -26,7 +25,6 @@ export default function Dashboard() {
     },
   };
 
-  // dummy data table
   const transaksi = [
     { id: 1, nama: 'Budi', jumlah: 50000, status: 'Selesai' },
     { id: 2, nama: 'Ani', jumlah: 75000, status: 'Proses' },

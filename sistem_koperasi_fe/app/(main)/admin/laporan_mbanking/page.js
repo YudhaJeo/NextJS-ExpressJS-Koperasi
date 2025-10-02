@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import HeaderBar from '@/app/components/headerbar';
+import HeaderBar from '../../../components/headerbar';
 import TabelSimpanan from './components/tabelLaporanMbanking';
-import ToastNotifier from '@/app/components/toastNotifier';
+import ToastNotifier from '../../../components/toastNotifier';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
-import FilterTanggal from '@/app/components/filterTanggal';
+import dynamic from "next/dynamic";
+import FilterTanggal from '../../../components/filterTanggal';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 

@@ -5,7 +5,7 @@ import axios from 'axios';
 import HeaderBar from '../../../components/headerbar';
 import TabelData from './components/tabelData';
 import FormDialog from './components/formDialog';
-import ToastNotifier from '../../..//components/toastNotifier';
+import ToastNotifier from '../../../components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import FilterTanggal from '../../../components/filterTanggal';
 
