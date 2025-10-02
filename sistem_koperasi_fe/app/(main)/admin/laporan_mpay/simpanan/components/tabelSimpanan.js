@@ -80,6 +80,8 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalMutasi }) => {
       paginatorLeft={paginatorLeft}
       paginatorRight={paginatorRight}
       footerColumnGroup={footerGroup}
+      sortField="updated_at" 
+      sortOrder={-1}
     >
       <Column field="Tgl" header="Tanggal" body={dateTemplate} />
       <Column field="Faktur" header="Faktur" />
