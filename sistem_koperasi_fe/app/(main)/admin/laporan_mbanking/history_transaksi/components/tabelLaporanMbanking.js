@@ -52,6 +52,12 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
     return `Rp. ${formatted}`;
   };
 
+const dkTemplate = (rowData) => {
+  if (rowData.DK === "D") return "Debit";
+  if (rowData.DK === "K") return "Kredit";
+  return "-";
+};
+
   const footerGroup = (
     <ColumnGroup>
       <Row>
@@ -100,7 +106,7 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
       <Column field="UserName" header="Username" />
       <Column field="Nama" header="Nama" />
       <Column field="Alamat" header="Alamat" />
-      <Column field="DK" header="Debit/Kredit" />
+      <Column field="DK" header="Debit/Kredit" body={dkTemplate}/>
       <Column field="Nominal" header="Nominal" body={rupiahTemplate} />
     </DataTable>
   );

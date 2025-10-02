@@ -105,6 +105,12 @@ export default function AdjustPrintMarginLaporan({
     .filter((item) => item.DK === 'K')
     .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
+  const dkTemplate = (rowData) => {
+  if (rowData.DK === "D") return "Debit";
+  if (rowData.DK === "K") return "Kredit";
+  return "-";
+};
+
   autoTable(doc, {
     startY: startY,
     head: [[
@@ -122,27 +128,35 @@ export default function AdjustPrintMarginLaporan({
       item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
       item.Faktur,
       item.Rekening,
-      item.DK,
+      item.DK ? dkTemplate(item) : '-',
       item.Jumlah
         ? item.Jumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
         : '-',
     ]),
-    foot: [[
-      { content: 'Total Saldo Debit', colSpan: 5, styles: { halign: 'right', fontStyle: 'bold' } },
-      { content: totalDebit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }), styles: { halign: 'right', fontStyle: 'bold' } },
-    ], [
-      { content: 'Total Saldo Kredit', colSpan: 5, styles: { halign: 'right', fontStyle: 'bold' } },
-      { content: totalKredit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }), styles: { halign: 'right', fontStyle: 'bold' } },
-    ]],
     margin: { left: marginLeft, right: marginRight },
     styles: { fontSize: 9, cellPadding: 2 },
     headStyles: { fillColor: [41, 128, 185], textColor: 255 },
     alternateRowStyles: { fillColor: [248, 249, 250] },
-    footStyles: { fillColor: [230, 230, 230], textColor: 20, fontStyle: 'bold' },
   });
+
+  const finalY = doc.lastAutoTable.finalY || startY;
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text(
+    `Total Saldo Debit : ${totalDebit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
+    marginLeft,
+    finalY + 10
+  );
+  doc.text(
+    `Total Saldo Kredit: ${totalKredit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
+    marginLeft,
+    finalY + 16
+  );
 
   return doc.output('datauristring');
 }
+
 
 
   const exportExcel = () => {

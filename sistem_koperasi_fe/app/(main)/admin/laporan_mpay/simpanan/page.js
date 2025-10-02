@@ -21,7 +21,6 @@ const Page = () => {
   const [pdfUrl, setPdfUrl] = useState("");
   const [fileName, setFileName] = useState("");
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("../../../../components/PDFViewer"), { ssr: false });
   const toastRef = useRef(null);
 
   const [startDate, setStartDate] = useState(null);
@@ -145,9 +144,17 @@ const Page = () => {
         onHide={() => setJsPdfPreviewOpen(false)}
         modal
         style={{ width: "90vw", height: "90vh" }}
-        header="Preview PDF"
+        header={`Preview PDF - ${fileName}`}
       >
-        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+        {pdfUrl ? (
+          <iframe
+            src={pdfUrl}
+            title="PDF Preview"
+            style={{ width: "100%", height: "80vh", border: "none" }}
+          />
+        ) : (
+          <p>PDF belum tersedia</p>
+        )}
       </Dialog>
     </div>
   );
