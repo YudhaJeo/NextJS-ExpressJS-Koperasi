@@ -9,11 +9,13 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
 import dynamic from "next/dynamic";
+import FilterTanggal from '@/app/components/filterTanggal';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [adjustDialog, setAdjustDialog] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
@@ -21,6 +23,9 @@ const Page = () => {
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
   const PDFViewer = dynamic(() => import("@/app/components/PDFViewer"), { ssr: false });
   const toastRef = useRef(null);
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -31,6 +36,7 @@ const Page = () => {
     try {
       const res = await axios.get(`${API_URL}/simpanan`);
       setData(res.data.data);
+      setOriginalData(res.data.data);
     } catch (err) {
       console.error('Gagal ambil data:', err);
       toastRef.current?.showToast('01', 'Gagal mengambil data');
@@ -39,12 +45,30 @@ const Page = () => {
     }
   };
 
+  const handleDateFilter = () => {
+    if (!startDate && !endDate) return setData(originalData);
+
+    const filtered = originalData.filter((item) => {
+      const visitDate = new Date(item.DateTime);
+      const from = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
+      const to = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
+      return (!from || visitDate >= from) && (!to || visitDate <= to);
+    });
+    setData(filtered);
+  };
+
+  const resetFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setData(originalData);
+  };
+
   const totalSetoran = data
-    .filter((item) => item.DK === 'D')
+    .filter((item) => item.Faktur?.startsWith("MT"))
     .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
   const totalPenarikan = data
-    .filter((item) => item.DK === 'K')
+    .filter((item) => item.Faktur?.startsWith("MP"))
     .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
   const totalMutasi = data.reduce((acc, item) => acc + (item.Jumlah || 0), 0);
@@ -56,6 +80,15 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Laporan Simpanan</h3>
 
+    <div className="flex items-center justify-content-between">
+      <FilterTanggal
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        handleDateFilter={handleDateFilter}
+        resetFilter={resetFilter}
+      />
       <HeaderBar
         title=""
         placeholder="Cari nama, rekening, atau faktur"
@@ -69,6 +102,7 @@ const Page = () => {
           setData(filtered);
         }}
       />
+    </div>
 
       <div className="flex justify-between mb-3">
         <span>Total Setoran: {totalSetoran.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</span>
@@ -81,6 +115,7 @@ const Page = () => {
         loading={loading}
         onRefresh={fetchData}
         onPrint={() => setAdjustDialog(true)}
+        totalMutasi={totalMutasi}
       />
 
       <AdjustPrintMarginLaporan
