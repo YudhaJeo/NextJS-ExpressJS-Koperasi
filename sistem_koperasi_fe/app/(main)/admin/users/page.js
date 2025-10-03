@@ -15,7 +15,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const UsersPage = () => {
   const [data, setData] = useState([]);
-  const [roles, setRoles] = useState([]);
+  const [roleOptions, setRoleOptions] = useState([]);
   const [perusahaan, setPerusahaan] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -24,9 +24,9 @@ const UsersPage = () => {
     name: '',
     email: '',
     password: '',
-    role: '',
+    role_id: '',
     kode_perusahaan: '',
-    aktivasi: 1
+    status: 1
   });
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
@@ -58,7 +58,11 @@ const UsersPage = () => {
   const fetchRoles = async () => {
     try {
       const res = await axios.get(`${API_URL}/roles`);
-      setRoles(res.data.data);
+      const options = res.data.data.map((item) => ({
+        label: item.name,
+        value: item.id,
+      }));
+      setRoleOptions(options);
     } catch (err) {
       console.error('Gagal ambil role:', err);
     }
@@ -78,9 +82,9 @@ const UsersPage = () => {
     if (!form.name.trim()) newErrors.name = 'Nama wajib diisi';
     if (!form.email.trim()) newErrors.email = 'Email wajib diisi';
     if (!form.password && !form.id) newErrors.password = 'Password wajib diisi';
-    if (!form.role) newErrors.role = 'Role wajib dipilih';
+    if (!form.role_id) newErrors.role_id = 'Role wajib dipilih';
     if (!form.kode_perusahaan) newErrors.kode_perusahaan = 'Kode perusahaan wajib dipilih';
-    if (!form.aktivasi) newErrors.aktivasi = 'Status aktivasi wajib dipilih';
+    if (!form.status) newErrors.status = 'Status status wajib dipilih';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -109,9 +113,9 @@ const UsersPage = () => {
         name: '',
         email: '',
         password: '',
-        role: '',
+        role_id: '',
         kode_perusahaan: '',
-        aktivasi: 1
+        status: 1
       });
     } catch (err) {
       console.error('Gagal simpan data:', err);
@@ -121,11 +125,17 @@ const UsersPage = () => {
 
   const handleEdit = (row) => {
     setForm({
-      ...row,
-      password: '' 
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      password: '',
+      role_id: row.role_id ?? '', 
+      kode_perusahaan: row.kode_perusahaan ?? '',
+      status: row.status === 1 ? 1 : 2 // Pastikan status sesuai dengan dropdown di formDialog
     });
     setDialogVisible(true);
   };
+  
 
   const handleDelete = (row) => {
     confirmDialog({
@@ -170,9 +180,9 @@ const UsersPage = () => {
             name: '',
             email: '',
             password: '',
-            role: '',
+            role_id: '',
             kode_perusahaan: '',
-            aktivasi: 1
+            status: 1
           });
           setDialogVisible(true);
         }}
@@ -196,16 +206,16 @@ const UsersPage = () => {
             name: '',
             email: '',
             password: '',
-            role: '',
+            role_id: '',
             kode_perusahaan: '',
-            aktivasi: 1
+            status: 1
           });
         }}
         onSubmit={handleSubmit}
         form={form}
         setForm={setForm}
         errors={errors}
-        roleOptions={roles}
+        roleOptions={roleOptions}
         perusahaanOptions={perusahaan}
       />
 

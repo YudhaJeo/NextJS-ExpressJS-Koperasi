@@ -20,12 +20,12 @@ const FormDialogUser = ({
 
   const aktivasiOptions = [
     { label: 'Aktif', value: 1 },
-    { label: 'Tidak Aktif', value: 2 },
+    { label: 'Tidak Aktif', value: 0 },
   ];
 
   return (
     <Dialog
-      header={form.Id ? 'Edit User' : 'Tambah User'}
+      header={form.id ? 'Edit User' : 'Tambah User'}
       visible={visible}
       onHide={onHide}
       style={{ width: '50vw' }}
@@ -37,9 +37,8 @@ const FormDialogUser = ({
           onSubmit();
         }}
       >
-        {/* Name & Email */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
+        <div className="">
+          <div className='mt-2'>
             <label>Nama</label>
             <InputText
               className={inputClass('name')}
@@ -49,7 +48,7 @@ const FormDialogUser = ({
             />
             {errors.name && <small className="text-red-500">{errors.name}</small>}
           </div>
-          <div>
+          <div className='mt-2'>
             <label>Email</label>
             <InputText
               className={inputClass('email')}
@@ -61,8 +60,7 @@ const FormDialogUser = ({
           </div>
         </div>
 
-        {/* Password */}
-        <div>
+        <div className='mt-2'>
           <label>Password</label>
           <InputText
             type="password"
@@ -74,34 +72,35 @@ const FormDialogUser = ({
           {errors.password && <small className="text-red-500">{errors.password}</small>}
         </div>
 
-        {/* Dropdown Aktivasi */}
-        <div>
-          <label>Aktivasi</label>
+        <div className='mt-2'>
+          <label>Status</label>
           <Dropdown
-            className={inputClass('aktivasi')}
-            value={form.aktivasi || ''}
-            options={aktivasiOptions}
-            onChange={(e) => setForm({ ...form, aktivasi: e.value })}
+            className={inputClass('status')}
+            value={form.status || ''}
+            options={[
+              { label: 'Aktif', value: 1 },
+              { label: 'Tidak Aktif', value: 2 },
+            ]}
+            onChange={(e) => setForm({ ...form, status: e.value })}
             placeholder="Pilih status"
           />
-          {errors.aktivasi && <small className="text-red-500">{errors.aktivasi}</small>}
+          {errors.status && <small className="text-red-500">{errors.status}</small>}
         </div>
 
-        {/* Dropdown Role */}
-        <div>
+
+        <div className="mt-2">
           <label>Role</label>
           <Dropdown
-            className={inputClass('role')}
-            value={form.role || ''}
-            options={roleOptions.map((r) => ({ label: r.name, value: r.id }))}
-            onChange={(e) => setForm({ ...form, role: e.value })}
+            className={inputClass('role_id')}
+            options={roleOptions}
+            value={form.role_id}
+            onChange={(e) => setForm({ ...form, role_id: e.value })}
             placeholder="Pilih role"
           />
-          {errors.role && <small className="text-red-500">{errors.role}</small>}
+          {errors.role_id && <small className="text-red-500">{errors.role_id}</small>}
         </div>
 
-        {/* Dropdown Kode Perusahaan */}
-        <div>
+        <div className='mt-2'>
           <label>Kode Perusahaan</label>
           <Dropdown
             className={inputClass('kode_perusahaan')}
@@ -118,7 +117,6 @@ const FormDialogUser = ({
           )}
         </div>
 
-        {/* Tombol Simpan */}
         <div className="text-right pt-3">
           <Button
             type="submit"

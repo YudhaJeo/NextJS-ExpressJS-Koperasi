@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -69,6 +68,8 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
     >
       <Column field="name" header="Name" />
       <Column field="email" header="Email" />
+      <Column field="role_id" header="Role" />
+      <Column field="password" header="Password" />
       <Column field="created_at" header="Created" body={createdBody} />
       <Column field="status" header="Status" body={statusBodyTemplate} />
       <Column field="kode_perusahaan" header="Kode Perusahaan" />
