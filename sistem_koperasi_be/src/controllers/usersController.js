@@ -1,77 +1,126 @@
-import * as UsersModel from '../models/usersModel.js';
+import * as Users from '../models/usersModel.js';
 import bcrypt from 'bcrypt';
 
-export const index = async (req, res) => {
+export async function getAllUsers(req, res) {
   try {
-    const users = await UsersModel.getAllUsers();
-    res.json({ success: true, data: users });
+    const data = await Users.getAllUsers();
+    res.json({ data });
   } catch (err) {
+    console.error('Gagal ambil users:', err);
     res.status(500).json({ error: err.message });
   }
-};
+}
 
-export const show = async (req, res) => {
+export async function getUserById(req, res) {
   try {
-    const { id } = req.params;
-    const user = await UsersModel.getUserById(id);
-    if (!user) return res.status(404).json({ error: 'User tidak ditemukan' });
-    res.json({ success: true, data: user });
+    const id = req.params.id;
+    const user = await Users.getUserById(id);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User tidak ditemukan' });
+    }
+
+    res.json({ data: user });
   } catch (err) {
+    console.error('Gagal ambil user:', err);
     res.status(500).json({ error: err.message });
   }
-};
+}
 
-export const store = async (req, res) => {
+export async function createUser(req, res) {
   try {
-    const { name, email, password, phonenumber, kode_perusahaan, mode, status } = req.body;
+    const {
+      name,
+      email,
+      password,
+      phonenumber,
+      kode_perusahaan,
+      mode,
+      status,
+      role_id, // ambil dari body, opsional
+    } = req.body;
 
-    const existing = await UsersModel.findByEmail(email);
-    if (existing) return res.status(400).json({ error: 'Email sudah terdaftar' });
+    const existing = await Users.findByEmail(email);
+    if (existing) {
+      return res.status(400).json({ error: 'Email sudah terdaftar' });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await UsersModel.createUser({
+    await Users.createUser({
       name,
       email,
       password: hashedPassword,
       phonenumber,
       kode_perusahaan,
+      role_id: role_id || null, // kalau ga ada dikirim, null
       mode: mode || 'light',
-      status: status || 1,
+      status: status ?? 1, // default 1
       created_at: new Date(),
       updated_at: new Date(),
     });
 
-    res.json({ success: true, message: 'User berhasil dibuat' });
+    res.json({ message: 'User berhasil dibuat' });
   } catch (err) {
+    console.error('Gagal membuat user:', err);
     res.status(500).json({ error: err.message });
   }
-};
+}
 
-export const update = async (req, res) => {
+export async function updateUser(req, res) {
   try {
-    const { id } = req.params;
-    const { name, email, password, phonenumber, kode_perusahaan, mode, status } = req.body;
+    const id = req.params.id;
+    const {
+      name,
+      email,
+      password,
+      phonenumber,
+      kode_perusahaan,
+      mode,
+      status,
+      role_id,
+    } = req.body;
 
-    const dataUpdate = { name, email, phonenumber, kode_perusahaan, mode, status };
+    const existing = await Users.getUserById(id);
+    if (!existing) {
+      return res.status(404).json({ error: 'User tidak ditemukan' });
+    }
+
+    const dataUpdate = {
+      name,
+      email,
+      phonenumber,
+      kode_perusahaan,
+      mode,
+      status,
+      role_id: role_id || null,
+    };
 
     if (password) {
       dataUpdate.password = await bcrypt.hash(password, 10);
     }
 
-    await UsersModel.updateUser(id, dataUpdate);
-    res.json({ success: true, message: 'User berhasil diperbarui' });
+    await Users.updateUser(id, dataUpdate);
+    res.json({ message: 'User berhasil diperbarui' });
   } catch (err) {
+    console.error('Gagal update user:', err);
     res.status(500).json({ error: err.message });
   }
-};
+}
 
-export const destroy = async (req, res) => {
+export async function deleteUser(req, res) {
   try {
-    const { id } = req.params;
-    await UsersModel.deleteUser(id);
-    res.json({ success: true, message: 'User berhasil dihapus' });
+    const id = req.params.id;
+
+    const existing = await Users.getUserById(id);
+    if (!existing) {
+      return res.status(404).json({ error: 'User tidak ditemukan' });
+    }
+
+    await Users.deleteUser(id);
+    res.json({ message: 'User berhasil dihapus' });
   } catch (err) {
+    console.error('Gagal hapus user:', err);
     res.status(500).json({ error: err.message });
   }
-};
+}
