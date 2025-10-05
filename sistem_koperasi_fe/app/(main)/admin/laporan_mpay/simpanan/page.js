@@ -8,7 +8,6 @@ import ToastNotifier from '../../../../components/toastNotifier';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
-import dynamic from "next/dynamic";
 import FilterTanggal from '../../../../components/filterTanggal';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -79,47 +78,47 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Laporan Simpanan</h3>
 
-    <div className="flex items-center justify-content-between">
-      <FilterTanggal
-        startDate={startDate}
-        endDate={endDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
-        handleDateFilter={handleDateFilter}
-        resetFilter={resetFilter}
-      />
-      <HeaderBar
-        title=""
-        placeholder="Cari nama, rekening, atau faktur"
-        onSearch={(keyword) => {
-          if (!keyword) return fetchData();
-          const filtered = data.filter((item) =>
-            item.Nama?.toLowerCase().includes(keyword.toLowerCase()) ||
-            item.Rekening?.toLowerCase().includes(keyword.toLowerCase()) ||
-            item.Faktur?.toLowerCase().includes(keyword.toLowerCase())
-          );
-          setData(filtered);
-        }}
-      />
-    </div>
+      <div className="flex items-center justify-content-between">
+        <FilterTanggal
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          handleDateFilter={handleDateFilter}
+          resetFilter={resetFilter}
+        />
+        <HeaderBar
+          title=""
+          placeholder="Cari nama, rekening, atau faktur"
+          onSearch={(keyword) => {
+            if (!keyword) return fetchData();
+            const filtered = data.filter((item) =>
+              item.Nama?.toLowerCase().includes(keyword.toLowerCase()) ||
+              item.Rekening?.toLowerCase().includes(keyword.toLowerCase()) ||
+              item.Faktur?.toLowerCase().includes(keyword.toLowerCase())
+            );
+            setData(filtered);
+          }}
+        />
+      </div>
 
-      <div className="flex justify-between mb-2">
-      <span className="font-semibold">
-        Total Setoran:{" "}
-        {totalSetoran.toLocaleString("id-ID", {
-          style: "currency",
-          currency: "IDR",
-        })}
-      </span>
+      <div className="flex justify-content-between mb-2">
+        <span className="font-semibold">
+          Total Setoran:{" "}
+          {totalSetoran.toLocaleString("id-ID", {
+            style: "currency",
+            currency: "IDR",
+          })}
+        </span>
 
-      <span className="font-semibold">
-        Total Penarikan:{" "}
-        {totalPenarikan.toLocaleString("id-ID", {
-          style: "currency",
-          currency: "IDR",
-        })}
-      </span>
-    </div>
+        <span className="font-semibold">
+          Total Penarikan:{" "}
+          {totalPenarikan.toLocaleString("id-ID", {
+            style: "currency",
+            currency: "IDR",
+          })}
+        </span>
+      </div>
 
       <TabelSimpanan
         data={data}
@@ -159,5 +158,4 @@ const Page = () => {
     </div>
   );
 };
-
 export default Page;

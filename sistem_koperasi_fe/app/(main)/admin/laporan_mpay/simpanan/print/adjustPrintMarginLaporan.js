@@ -83,78 +83,85 @@ export default function AdjustPrintMarginLaporan({
 
     return marginTop + 43;
   };
-  
+
   async function exportPDF(adjustConfig) {
-  const doc = new jsPDF({
-    orientation: adjustConfig.orientation,
-    unit: 'mm',
-    format: adjustConfig.paperSize,
-  });
+    const doc = new jsPDF({
+      orientation: adjustConfig.orientation,
+      unit: 'mm',
+      format: adjustConfig.paperSize,
+    });
 
-  const marginLeft = parseFloat(adjustConfig.marginLeft);
-  const marginTop = parseFloat(adjustConfig.marginTop);
-  const marginRight = parseFloat(adjustConfig.marginRight);
+    const marginLeft = parseFloat(adjustConfig.marginLeft);
+    const marginTop = parseFloat(adjustConfig.marginTop);
+    const marginRight = parseFloat(adjustConfig.marginRight);
+    const pageWidth = doc.internal.pageSize.width;
 
-  const startY = addHeader(doc, 'Laporan Simpanan', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'Laporan Simpanan', marginLeft, marginTop, marginRight);
 
-  const totalSetoran = data
-    .filter((item) => item.Faktur?.startsWith("MT"))
-    .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
+    const totalSetoran = data
+      .filter((item) => item.Faktur?.startsWith("MT"))
+      .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
-  const totalPenarikan = data
-    .filter((item) => item.Faktur?.startsWith("MP"))
-    .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
+    const totalPenarikan = data
+      .filter((item) => item.Faktur?.startsWith("MP"))
+      .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
-  const totalMutasi = data.reduce((acc, item) => acc + (item.Jumlah || 0), 0);
+    const totalMutasi = data.reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
-  autoTable(doc, {
-    startY: startY,
-    head: [[ 
-      'No',
-      'UserName',
-      'Tanggal',
-      'Faktur',
-      'Rekening',
-      'Mutasi',
-    ]],
-    body: data.map((item) => [
-      item.ID,
-      item.UserName,
-      item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
-      item.Faktur,
-      item.Rekening,
-      item.Jumlah
-        ? item.Jumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
-        : '-',
-    ]),
-    margin: { left: marginLeft, right: marginRight },
-    styles: { fontSize: 9, cellPadding: 2 },
-    headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-    alternateRowStyles: { fillColor: [248, 249, 250] },
-  });
+    autoTable(doc, {
+      startY: startY,
+      head: [[
+        'No',
+        'UserName',
+        'Tanggal',
+        'Faktur',
+        'Rekening',
+        'Mutasi',
+      ]],
+      body: data.map((item) => [
+        item.ID,
+        item.UserName,
+        item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
+        item.Faktur,
+        item.Rekening,
+        item.Jumlah
+          ? item.Jumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+          : '-',
+      ]),
+      margin: { left: marginLeft, right: marginRight },
+      styles: { fontSize: 9, cellPadding: 2 },
+      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      alternateRowStyles: { fillColor: [248, 249, 250] },
+    });
 
-  let finalY = doc.lastAutoTable.finalY || startY;
+    let finalY = doc.lastAutoTable.finalY || startY;
 
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'bold');
-  doc.text(
-    `Total Setoran   : ${totalSetoran.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
-    marginLeft,
-    finalY + 10
-  );
-  doc.text(
-    `Total Penarikan : ${totalPenarikan.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
-    marginLeft,
-    finalY + 16
-  );
-  doc.text(
-    `Total Mutasi    : ${totalMutasi.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
-    marginLeft,
-    finalY + 22
-  );
+    const rightX = pageWidth - marginRight; 
 
-  return doc.output('datauristring');
-}
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+
+    doc.text(
+      `Total Setoran   : ${totalSetoran.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
+      rightX,
+      finalY + 10,
+      { align: 'right' }
+    );
+    doc.text(
+      `Total Penarikan : ${totalPenarikan.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
+      rightX,
+      finalY + 16,
+      { align: 'right' }
+    );
+    doc.text(
+      `Total Mutasi    : ${totalMutasi.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
+      rightX,
+      finalY + 22,
+      { align: 'right' }
+    );
+
+    return doc.output('datauristring');
+  }
 
 
   const exportExcel = () => {
@@ -183,14 +190,14 @@ export default function AdjustPrintMarginLaporan({
         label="Export Excel"
         icon="pi pi-file-excel"
         severity="success"
-        className="p-button-outlined" 
+        className="p-button-outlined"
         onClick={exportExcel}
       />
       <Button
         label="Export PDF"
         icon="pi pi-file-pdf"
         severity="danger"
-        className="p-button-outlined" 
+        className="p-button-outlined"
         onClick={handleExportPdf}
         loading={loadingExport}
       />
