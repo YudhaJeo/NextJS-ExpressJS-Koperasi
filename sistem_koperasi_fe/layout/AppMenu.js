@@ -10,14 +10,14 @@ const AppMenu = () => {
     {
       items: [
         { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/" },
-        { label: "Ativasi Mpay", icon: "pi pi-fw pi-credit-card", to: "/admin/aktivasi_mpay" },
+        { label: "Aktivasi Mpay", icon: "pi pi-fw pi-wallet", to: "/admin/aktivasi_mpay" },
         {
           label: "Laporan Mpay",
           icon: "pi pi-fw pi-list",
           items: [{ label: "Simpanan", icon: "pi pi-fw pi-money-bill", to: "/admin/laporan_mpay/simpanan" }],
         },
-        { label: "Ativasi Mbanking", icon: "pi pi-fw pi-credit-card", to: "/admin/aktivasi_mbanking" },
-        { label: "Config Biaya Admin", icon: "pi pi-fw pi-wallet", to: "/admin/config_biaya_admin" },
+        { label: "Aktivasi Mbanking", icon: "pi pi-fw pi-mobile", to: "/admin/aktivasi_mbanking" },
+        { label: "Config Biaya Admin", icon: "pi pi-fw pi-credit-card", to: "/admin/config_biaya_admin" },
         {
           label: "Laporan Mbanking",
           icon: "pi pi-fw pi-list",

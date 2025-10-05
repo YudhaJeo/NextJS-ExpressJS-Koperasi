@@ -8,11 +8,11 @@ import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import axios from 'axios';
 
 export default function Dashboard() {
   const [cards, setCards] = useState([]);
-  const [chartData, setChartData] = useState(null);
+  const [chartAktivasi, setChartAktivasi] = useState(null);
+  const [chartTransaksi, setChartTransaksi] = useState(null);
   const [chartOptions, setChartOptions] = useState({});
   const [userData, setUserData] = useState([]);
   const [simpananData, setSimpananData] = useState([]);
@@ -29,11 +29,10 @@ export default function Dashboard() {
       const res = await fetch(`${API_URL}/dashboard`);
       const data = await res.json();
 
-      // Cards
       setCards(data.cards);
 
-      // Chart
-      setChartData(data.chart);
+      setChartAktivasi(data.chartAktivasi);
+      setChartTransaksi(data.chartTransaksi);
       setChartOptions({
         plugins: { legend: { position: 'bottom' } },
         responsive: true,
@@ -43,7 +42,6 @@ export default function Dashboard() {
         }
       });
 
-      // Tables
       setUserData(data.tabelUser || []);
       setSimpananData(data.tabelSimpanan.data || []);
       setTotalDebit(data.tabelSimpanan.totalDebit || 0);
@@ -76,7 +74,6 @@ export default function Dashboard() {
 
   return (
     <div className="grid">
-      {/* Summary Cards */}
       {cards.map((c, i) => (
         <div key={i} className="col-12 md:col-3">
           <Card className="shadow-2 text-center" style={{ borderTop: `4px solid ${c.color}` }}>
@@ -89,12 +86,11 @@ export default function Dashboard() {
         </div>
       ))}
 
-      {/* Chart */}
-      <div className="col-12">
-        <Card title="Statistik Data" className="mb-4">
-          {chartData ? (
+      <div className="col-12 md:col-6">
+        <Card title="Statistik Aktivasi" className="mb-4">
+          {chartAktivasi ? (
             <div style={{ height: '300px' }}>
-              <Chart type="bar" data={chartData} options={chartOptions} className="w-full h-full" />
+              <Chart type="bar" data={chartAktivasi} options={chartOptions} className="w-full h-full" />
             </div>
           ) : (
             <div className="flex justify-content-center p-5">
@@ -104,9 +100,22 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Tabel User */}
+      <div className="col-12 md:col-6">
+        <Card title="Statistik Transaksi" className="mb-4">
+          {chartTransaksi ? (
+            <div style={{ height: '300px' }}>
+              <Chart type="bar" data={chartTransaksi} options={chartOptions} className="w-full h-full" />
+            </div>
+          ) : (
+            <div className="flex justify-content-center p-5">
+              <ProgressSpinner />
+            </div>
+          )}
+        </Card>
+      </div>
+
       <div className="col-12">
-        <Card title="Data User Terbaru" subTitle="50 data terakhir">
+        <Card title="Data User Terbaru" subTitle="10 data terakhir">
           <DataTable
             value={userData}
             paginator
@@ -124,9 +133,8 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Tabel Simpanan */}
       <div className="col-12">
-        <Card title="Data Simpanan Terbaru" subTitle="50 data terakhir">
+        <Card title="Data Simpanan Terbaru" subTitle="10 data terakhir">
           <DataTable
             value={simpananData}
             paginator
@@ -134,12 +142,6 @@ export default function Dashboard() {
             loading={loading}
             responsiveLayout="scroll"
             emptyMessage="Tidak ada data simpanan"
-            footer={
-              <div className="flex justify-content-between font-bold px-2">
-                <span>Total Debit: Rp {Number(totalDebit).toLocaleString('id-ID')}</span>
-                <span>Total Kredit: Rp {Number(totalKredit).toLocaleString('id-ID')}</span>
-              </div>
-            }
           >
             <Column field="Tgl" header="Tanggal" />
             <Column field="Faktur" header="Faktur" />
@@ -158,8 +160,7 @@ export default function Dashboard() {
           </DataTable>
         </Card>
       </div>
-
-      {/* Tabel Mutasi */}
+      
       <div className="col-12">
         <Card title="Data Mutasi Terakhir" subTitle="10 data terakhir">
           <DataTable

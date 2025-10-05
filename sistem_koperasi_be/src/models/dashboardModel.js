@@ -4,71 +4,82 @@ export const getDashboardInfo = async () => {
   try {
     const totalUser = await db('users').count('id as total');
     const totalPerusahaan = await db('perusahaan').count('Id as total');
+
+    const totalAktivasiMbank = await db('mbanking_username').count('Id as total');
+    const totalAktivasiMpay = await db('register_mpay').count('Id as total');
+
+    const totalDebit = await db('mutasitabungan').where('DK', 'D').sum('Jumlah as total');
+    const totalKredit = await db('mutasitabungan').where('DK', 'K').sum('Jumlah as total');
     const totalSimpanan = await db('mutasitabungan').sum('Jumlah as total');
-    const totalAktivasiMbank = await db('mbanking_username').sum('id as total');
+    const totalMutasi = await db('mutasitabungan').sum('Jumlah as total');
 
     const cards = [
       {
         title: 'Total User',
         value: totalUser[0].total,
         color: '#42A5F5',
-        icon: 'pi pi-users'
+        icon: 'pi pi-user'
       },
       {
         title: 'Total Perusahaan',
         value: totalPerusahaan[0].total,
         color: '#66BB6A',
-        icon: 'pi pi-building'
+        icon: 'pi pi-building-columns'
       },
       {
-        title: 'Total Simpanan',
-        value: totalSimpanan[0].total || 0,
-        color: '#FFA726',
-        icon: 'pi pi-wallet'
-      },
-      {
-        title: 'Total Mutasi',
+        title: 'Total Aktivasi Mbanking',
         value: totalAktivasiMbank[0].total || 0,
+        color: '#FFA726',
+        icon: 'pi pi-mobile'
+      },
+      {
+        title: 'Total Aktivasi Mpay',
+        value: totalAktivasiMpay[0].total || 0,
         color: '#EF5350',
-        icon: 'pi pi-credit-card'
+        icon: 'pi pi-wallet'
       }
     ];
 
     const userData = await db('users')
-      .select(
-        'id',
-        'kode_perusahaan',
-        'name',
-        'status',
-        'created_at'
-      )
+      .select('id', 'kode_perusahaan', 'name', 'status', 'created_at')
       .orderBy('created_at', 'desc')
-      .limit(50);
+      .limit(10);
 
     const simpananData = await db('mutasitabungan')
       .select('Tgl', 'Faktur', 'Rekening', 'UserName', 'DK', 'Jumlah')
       .orderBy('Tgl', 'desc')
-      .limit(50);
-
-    const totalDebit = await db('mutasitabungan').where('DK', 'D').sum('Jumlah as total');
-    const totalKredit = await db('mutasitabungan').where('DK', 'K').sum('Jumlah as total');
+      .limit(10);
 
     const mutasiData = await db('mutasitabungan')
       .select('Tgl', 'Faktur', 'Rekening', 'UserName', 'Jumlah')
       .orderBy('Tgl', 'desc')
-      .limit(50);
+      .limit(10);
 
-    const totalMutasi = await db('mutasitabungan').sum('Jumlah as total');
+    const chartAktivasi = {
+      labels: ['User', 'Perusahaan', 'Mbanking', 'Mpay'],
+      datasets: [
+        {
+          label: 'Statistik Aktivasi',
+          backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#EF5350'],
+          data: [
+            totalUser[0].total,
+            totalPerusahaan[0].total,
+            totalAktivasiMbank[0].total || 0,
+            totalAktivasiMpay[0].total || 0
+          ]
+        }
+      ]
+    };
 
-    const chartData = {
+    const chartTransaksi = {
       labels: ['Debit', 'Kredit', 'Simpanan', 'Mutasi'],
       datasets: [
         {
-          label: 'Statistik',
+          label: 'Statistik Transaksi',
           backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#EF5350'],
           data: [
-            totalDebit[0].total,
-            totalKredit[0].total,
+            totalDebit[0].total || 0,
+            totalKredit[0].total || 0,
             totalSimpanan[0].total || 0,
             totalMutasi[0].total || 0
           ]
@@ -78,7 +89,8 @@ export const getDashboardInfo = async () => {
 
     return {
       cards,
-      chart: chartData,
+      chartAktivasi,
+      chartTransaksi,
       tabelUser: userData,
       tabelSimpanan: {
         data: simpananData,
