@@ -51,16 +51,37 @@ export default function AdjustPrintMarginUsers({
 
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.text('Laporan Users', pageWidth / 2, marginTop + 5, { align: 'center' });
+    doc.setTextColor(41, 128, 185);
+    doc.text('Koperasi', pageWidth / 2, marginTop + 5, { align: 'center' });
 
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'italic');
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text('Jl. A. Yani No. 84, Pangongangan, Kec. Manguharjo, Kota Madiun, Jawa Timur', pageWidth / 2, marginTop + 12, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text('Telp: (0351) 876-9090', pageWidth / 2, marginTop + 17, { align: 'center' });
+
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(marginLeft, marginTop + 22, pageWidth - marginRight, marginTop + 22);
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text(title, pageWidth / 2, marginTop + 29, { align: 'center' });
+
     const today = new Date().toLocaleDateString('id-ID', {
       day: 'numeric', month: 'long', year: 'numeric',
     });
-    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 12);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 37, { align: 'left' });
 
-    return marginTop + 20;
+    return marginTop + 43;
   };
   
   async function exportPDF(adjustConfig) {
@@ -106,7 +127,6 @@ export default function AdjustPrintMarginUsers({
   }
 
   const exportExcel = () => {
-    // Biar lebih rapi, pilih field yang ditampilkan saja
     const excelData = data.map((item, idx) => ({
       No: idx + 1,
       Name: item.name,
@@ -120,8 +140,8 @@ export default function AdjustPrintMarginUsers({
 
     const ws = XLSX.utils.json_to_sheet(excelData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Laporan Users');
-    XLSX.writeFile(wb, 'Laporan Users.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Users');
+    XLSX.writeFile(wb, 'Users.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -129,7 +149,7 @@ export default function AdjustPrintMarginUsers({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Laporan Users');
+      setFileName('Users');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {

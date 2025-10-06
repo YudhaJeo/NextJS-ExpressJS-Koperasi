@@ -136,7 +136,7 @@ export default function AdjustPrintMarginLaporan({
 
     let finalY = doc.lastAutoTable.finalY || startY;
 
-    const rightX = pageWidth - marginRight; 
+    const rightX = pageWidth - marginRight;
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
@@ -163,12 +163,26 @@ export default function AdjustPrintMarginLaporan({
     return doc.output('datauristring');
   }
 
-
   const exportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data);
+    const exportData = data.map((item, idx) => ({
+      No: idx + 1,
+      UserName: item.UserName,
+      Tanggal: item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
+      Faktur: item.Faktur,
+      Rekening: item.Rekening,
+      Mutasi: item.Jumlah ? `Rp ${item.Jumlah.toLocaleString('id-ID')}` : '-',
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Perusahaan');
-    XLSX.writeFile(wb, 'Perusahaan.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Laporan Simpanan');
+
+    const colWidths = Object.keys(exportData[0] || {}).map((key) => ({
+      wch: Math.max(key.length + 5, 15),
+    }));
+    ws['!cols'] = colWidths;
+
+    XLSX.writeFile(wb, 'Laporan Simpanan.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -176,7 +190,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Perusahaan');
+      setFileName('Laporan Simpanan');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {

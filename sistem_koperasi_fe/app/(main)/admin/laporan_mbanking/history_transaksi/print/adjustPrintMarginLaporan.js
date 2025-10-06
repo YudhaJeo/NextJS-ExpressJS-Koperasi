@@ -165,9 +165,26 @@ export default function AdjustPrintMarginLaporan({
   }
 
   const exportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data);
+    const exportData = data.map((item, idx) => ({
+      No: idx + 1,
+      Nama: item.UserName,
+      Tanggal: item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
+      Faktur: item.Faktur,
+      Rekening: item.Rekening,
+      'Debit/Kredit':
+        item.DK === 'D' ? 'Debit' : item.DK === 'K' ? 'Kredit' : '-',
+      Jumlah: item.Jumlah ? `Rp ${item.Jumlah.toLocaleString('id-ID')}` : '-',
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Laporan Mbanking');
+
+    const colWidths = Object.keys(exportData[0] || {}).map((key) => ({
+      wch: Math.max(key.length + 2, 15),
+    }));
+    ws['!cols'] = colWidths;
+
     XLSX.writeFile(wb, 'Laporan Mbanking.xlsx');
   };
 
