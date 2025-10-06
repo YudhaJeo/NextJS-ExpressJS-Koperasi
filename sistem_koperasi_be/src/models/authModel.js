@@ -2,9 +2,10 @@ import db from '../core/config/knex.js';
 
 export const findUserByEmail = async (email) => {
   const user = await db('users')
-    .where({ email: email })
+    .join('roles', 'users.role_id', '=', 'roles.id')
+    .where({ 'users.email': email })
     .first()
-    .select('*');
+    .select('users.*', 'roles.name as role_name');
 
   return user;
 };
