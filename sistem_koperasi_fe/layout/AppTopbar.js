@@ -29,7 +29,7 @@ const AppTopbar = forwardRef((props, ref) => {
     const [role, setRole] = useState("");
 
     useEffect(() => {
-        const name = Cookies.get("name");
+        const name = Cookies.get("username");
         if (name) setUsername(name);
 
         const roleData = Cookies.get("role_name");

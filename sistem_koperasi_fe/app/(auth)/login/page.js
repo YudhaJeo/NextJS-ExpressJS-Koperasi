@@ -14,32 +14,32 @@ import { useRouter } from "next/navigation";
 const URL = process.env.NEXT_PUBLIC_URL;
 
 function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const layout = useContext(LayoutContext);
-  const layoutConfig = layout?.layoutConfig ?? { inputStyle: '' };
+  const layoutConfig = layout?.layoutConfig ?? { inputStyle: "" };
 
   const toast = useRef(null);
   const router = useRouter();
 
   const containerClassName = classNames(
-      'surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden',
-      { 'p-input-filled': layoutConfig.inputStyle === 'filled' }
+    "surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden",
+    { "p-input-filled": layoutConfig.inputStyle === "filled" }
   );
 
-const handleLogin = async () => {
-  try {
-    if (!email || !password) {
-      toast.current.show({
-        severity: 'warn',
-        summary: 'Peringatan',
-        detail: 'Email dan password harus diisi',
-        life: 3000
-      });
-      return;
-    }
+  const handleLogin = async () => {
+    try {
+      if (!email || !password) {
+        toast.current.show({
+          severity: "warn",
+          summary: "Peringatan",
+          detail: "Email dan password harus diisi",
+          life: 3000,
+        });
+        return;
+      }
 
-    const res = await axios.post(`${URL}/login`, { email, password });
+      const res = await axios.post(`${URL}/login`, { email, password });
 
     Cookies.set('accessToken', res.data.accessToken);
     Cookies.set('name', res.data.name);
@@ -123,6 +123,13 @@ const handleLogin = async () => {
                     </div>
                 </div>
             </div>
+
+            <Button
+              label="Sign In"
+              className="w-full mt-2 p-3"
+              onClick={handleLogin}
+            />
+          </div>
         </div>
     );
 }

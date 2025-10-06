@@ -120,7 +120,6 @@ export default function ProfilePage() {
         email: userData.email
       });
 
-      // Update cookie dengan data baru
       Cookies.set('name', userData.name, { expires: 7 });
       Cookies.set('email', userData.email, { expires: 7 });
 
