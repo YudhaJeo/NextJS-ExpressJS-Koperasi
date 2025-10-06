@@ -43,7 +43,7 @@ export default function ProfilePage() {
 
       Cookies.set('name', name, { expires: 7 });
       Cookies.set('email', email, { expires: 7 });
-      Cookies.set('user_id', id, { expires: 7 });\
+      Cookies.set('user_id', id, { expires: 7 });
 
       setUserData({ id, name, email });
     } catch (error) {
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                       icon="pi pi-times"
                       onClick={() => {
                         setIsEditing(false);
-
+           
                         const cookieUsername = Cookies.get('name');
                         const cookieEmail = Cookies.get('email');
                         const cookieId = Cookies.get('user_id');
