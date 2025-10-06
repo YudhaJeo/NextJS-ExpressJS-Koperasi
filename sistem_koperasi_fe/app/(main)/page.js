@@ -23,6 +23,13 @@ export default function Dashboard() {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    if (isNaN(date)) return '-';
+    return date.toISOString().split('T')[0];
+  };
+
   const fetchDashboardData = async () => {
     setLoading(true);
     try {
@@ -30,7 +37,6 @@ export default function Dashboard() {
       const data = await res.json();
 
       setCards(data.cards);
-
       setChartAktivasi(data.chartAktivasi);
       setChartTransaksi(data.chartTransaksi);
       setChartOptions({
@@ -128,7 +134,7 @@ export default function Dashboard() {
             <Column field="name" header="Nama" />
             <Column field="kode_perusahaan" header="Cabang" />
             <Column field="status" header="Status" body={statusBody} />
-            <Column field="created_at" header="Tanggal Daftar" />
+            <Column field="created_at" header="Tanggal Daftar" body={(row) => formatDate(row.created_at)} />
           </DataTable>
         </Card>
       </div>
@@ -143,7 +149,7 @@ export default function Dashboard() {
             responsiveLayout="scroll"
             emptyMessage="Tidak ada data simpanan"
           >
-            <Column field="Tgl" header="Tanggal" />
+            <Column field="Tgl" header="Tanggal" body={(row) => formatDate(row.Tgl)} />
             <Column field="Faktur" header="Faktur" />
             <Column field="UserName" header="Nama" />
             <Column field="Rekening" header="Rekening" />
@@ -160,7 +166,7 @@ export default function Dashboard() {
           </DataTable>
         </Card>
       </div>
-      
+
       <div className="col-12">
         <Card title="Data Mutasi Terakhir" subTitle="10 data terakhir">
           <DataTable
@@ -171,7 +177,7 @@ export default function Dashboard() {
             responsiveLayout="scroll"
             emptyMessage="Tidak ada data mutasi"
           >
-            <Column field="Tgl" header="Tanggal" />
+            <Column field="Tgl" header="Tanggal" body={(row) => formatDate(row.Tgl)} />
             <Column field="Faktur" header="Faktur" />
             <Column field="UserName" header="Nama" />
             <Column field="Rekening" header="Rekening" />
