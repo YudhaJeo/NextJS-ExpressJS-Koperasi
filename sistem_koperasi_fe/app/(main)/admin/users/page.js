@@ -7,9 +7,6 @@ import TabelData from './components/tabelUsers';
 import FormDialogUser from './components/formDialog';
 import ToastNotifier from '../../../components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import AdjustPrintMarginUsers from "./print/adjustPrintMarginLaporan";
-import { Dialog } from "primereact/dialog";
-import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -30,11 +27,6 @@ const UsersPage = () => {
   });
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
-  const [adjustDialog, setAdjustDialog] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("../../../components/PDFViewer"), { ssr: false });
 
   useEffect(() => {
     fetchData();
@@ -131,7 +123,7 @@ const UsersPage = () => {
       password: '',
       role_id: row.role_id ?? '', 
       kode_perusahaan: row.kode_perusahaan ?? '',
-      status: row.status === 1 ? 1 : 2 // Pastikan status sesuai dengan dropdown di formDialog
+      status: row.status === 1 ? 1 : 2 
     });
     setDialogVisible(true);
   };
@@ -218,34 +210,6 @@ const UsersPage = () => {
         roleOptions={roleOptions}
         perusahaanOptions={perusahaan}
       />
-
-      <AdjustPrintMarginUsers
-        adjustDialog={adjustDialog}
-        setAdjustDialog={setAdjustDialog}
-        selectedRow={null}
-        data={data}
-        setPdfUrl={setPdfUrl}
-        setFileName={setFileName}
-        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
-      />
-
-      <Dialog
-        visible={jsPdfPreviewOpen}
-        onHide={() => setJsPdfPreviewOpen(false)}
-        modal
-        style={{ width: "90vw", height: "90vh" }}
-        header={`Preview PDF - ${fileName}`}
-      >
-        {pdfUrl ? (
-          <iframe
-            src={pdfUrl}
-            title="PDF Preview"
-            style={{ width: "100%", height: "80vh", border: "none" }}
-          />
-        ) : (
-          <p>PDF belum tersedia</p>
-        )}
-      </Dialog>
     </div>
   );
 };
