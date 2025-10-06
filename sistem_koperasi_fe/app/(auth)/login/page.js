@@ -27,46 +27,26 @@ function LoginPage() {
       { 'p-input-filled': layoutConfig.inputStyle === 'filled' }
   );
 
-  const handleLogin = async () => {
-      try {
-          if (!email || !password) {
-              toast.current.show({
-                  severity: 'warn', 
-                  summary: 'Peringatan', 
-                  detail: 'Email dan password harus diisi', 
-                  life: 3000 
-              });
-              return;
-          }
+const handleLogin = async () => {
+  try {
+    if (!email || !password) {
+      toast.current.show({
+        severity: 'warn',
+        summary: 'Peringatan',
+        detail: 'Email dan password harus diisi',
+        life: 3000
+      });
+      return;
+    }
 
-          const res = await axios.post(`${URL}/login`, { email, password });
+    const res = await axios.post(`${URL}/login`, { email, password });
 
-          Cookies.set('accessToken', res.data.accessToken);
-          Cookies.set('name', res.data.name);
-          Cookies.set('role_name', res.data.role_name, { expires: 1 });
-          Cookies.set('email', res.data.email, { expires: 1 });
-          Cookies.set('id', res.data.id, { expires: 1 });
+    Cookies.set('accessToken', res.data.accessToken);
+    Cookies.set('name', res.data.name);
+    Cookies.set('role_name', res.data.role_name, { expires: 1 });
+    Cookies.set('email', res.data.email, { expires: 1 });
+    Cookies.set('id', res.data.id, { expires: 1 });
 
-          switch (res.data.role_id) {
-              case 1:
-                  router.push('/');
-                  break;
-              default:
-                  router.push('/');
-          }
-      } catch (err) {
-          console.error('Login error:', err);
-          
-          const errorMessage = err.response?.data?.error || 'Terjadi kesalahan saat login';
-          
-          toast.current.show({
-              severity: 'error', 
-              summary: 'Login Gagal', 
-              detail: errorMessage, 
-              life: 3000 
-          });
-      }
-  };
 
   return (
     <div className={containerClassName}>
