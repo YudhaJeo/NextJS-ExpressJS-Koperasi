@@ -3,8 +3,6 @@ import { generateToken } from '../utils/jwt.js';
 import { loginSchema } from '../schemas/authSchema.js';
 import bcrypt from 'bcrypt';
 
-const EXPRESS_URL = process.env.EXPRESS_PUBLIC_URL;
-
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -17,35 +15,35 @@ export const login = async (req, res) => {
     const user = await findUserByEmail(email.trim());
     
     if (!user) {
-      return res.status(401).json({ error: 'Email atau password salah' });
+      return res.status(401).json({ error: 'Email belum terdaftar' });
     }
 
     const passwordMatch = await bcrypt.compare(password.trim(), user.password);
 
     if (!passwordMatch) {
-      return res.status(401).json({ error: 'Email atau password salah' });
+      return res.status(401).json({ error: 'Password salah' });
     }
 
-    // Cek status user
     if (user.status !== 1) {
       return res.status(403).json({ error: 'Akun Anda tidak aktif' });
     }
 
-    const token = await generateToken({
+    const accessTokenPayload = {
       id: user.id,
       role_id: user.role_id,
       email: user.email,
       kode_perusahaan: user.kode_perusahaan
-    });
+    };
+
+    const accessToken = await generateToken(accessTokenPayload);
 
     res.status(200).json({
-      token,
+      accessToken,
       username: user.name,
       email: user.email,
       role_id: user.role_id,
       kode_perusahaan: user.kode_perusahaan,
       mode: user.mode || 'dark',
-      avatar: user.avatar ? `${EXPRESS_URL}${user.avatar}` : null
     });
 
   } catch (err) {

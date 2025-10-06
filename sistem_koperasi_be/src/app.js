@@ -29,6 +29,6 @@ app.use('/api/config_biaya_admin', configBiayaAdminRoutes)
 app.use('/api/aktivasi_mbanking', aktivasiMbankingRoutes)
 app.use('/api/simpanan', simpananRoutes)
 app.use('/api/users', usersRoutes)
-app.use('/api/login', authRoutes)
+app.use('/login', authRoutes)
 
 export default app;
