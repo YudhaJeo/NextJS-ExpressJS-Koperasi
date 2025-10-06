@@ -9,10 +9,9 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    // Gunakan token dari cookie, bisa jadi namanya berbeda
-    const token = Cookies.get('token') || Cookies.get('accessToken');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+    const accessToken = Cookies.get('accessToken');
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -25,8 +24,6 @@ instance.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      // Hapus semua token
-      Cookies.remove('token');
       Cookies.remove('accessToken');
       window.location.href = '/login';
     }
