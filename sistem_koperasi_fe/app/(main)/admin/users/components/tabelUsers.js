@@ -5,7 +5,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
-const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
+const TabelData = ({ data, loading, onEdit, onDelete }) => {
   const formatDateTime = (dateTimeString) => {
     if (!dateTimeString || dateTimeString === '1900-01-01 00:00:00') return '-';
     return new Date(dateTimeString).toLocaleString('id-ID');
@@ -25,19 +25,6 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
     return formatDateTime(row.created_at);
   };
 
-  const paginatorLeft = (
-    <div className="flex gap-2">
-      <Button
-        icon="pi pi-refresh"
-        size="small"
-        severity="info"
-        onClick={onRefresh}
-        tooltip="Refresh Data"
-        className="p-button-outlined"
-      />
-    </div>
-  );
-
   return (
     <DataTable 
       value={data} 
@@ -48,13 +35,12 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
       size="small"
       scrollable
       scrollHeight="400px"
-      paginatorLeft={paginatorLeft}
       sortField="updated_at" 
       sortOrder={-1}
     >
       <Column field="name" header="Name" />
       <Column field="email" header="Email" />
-      <Column field="role_id" header="Role" />
+      <Column field="role_name" header="Role" />
       <Column field="password" header="Password" />
       <Column field="created_at" header="Created" body={createdBody} />
       <Column field="status" header="Status" body={statusBodyTemplate} />

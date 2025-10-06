@@ -25,19 +25,6 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh }) => {
     );
   };
 
-  const paginatorLeft = (
-    <div className="flex gap-2">
-      <Button
-        icon="pi pi-refresh"
-        size="small"
-        severity="info"
-        onClick={onRefresh}
-        tooltip="Refresh Data"
-        className="p-button-outlined"
-      />
-    </div>
-  );
-
   return (
     <DataTable 
       value={data} 
@@ -48,7 +35,6 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh }) => {
       size="small"
       scrollable
       scrollHeight="400px"
-      paginatorLeft={paginatorLeft}
       sortField="updated_at" 
       sortOrder={-1}
     >

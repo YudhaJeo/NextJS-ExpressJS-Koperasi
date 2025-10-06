@@ -33,41 +33,57 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
     </div>
   );
 
+  // 🔹 Format tanggal YYYY-MM-DD
   const dateTemplate = (rowData) => {
     if (!rowData.Tgl) return "-";
     const date = new Date(rowData.Tgl);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    if (isNaN(date)) return "-";
+    return date.toISOString().split("T")[0];
   };
 
-
+  // 🔹 Format rupiah tanpa desimal (,00)
   const rupiahTemplate = (rowData) => {
-    if (rowData.Jumlah == null) return '-';
-    const formatted = rowData.Jumlah.toLocaleString('id-ID', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    return `Rp. ${formatted}`;
+    if (rowData.Jumlah == null && rowData.Nominal == null) return "-";
+    const value = rowData.Jumlah ?? rowData.Nominal;
+    const formatted = value.toLocaleString("id-ID");
+    return `Rp ${formatted}`;
   };
 
+  // 🔹 Format kolom Debit/Kredit
+  const dkTemplate = (rowData) => {
+    if (rowData.DK === "D") return "Debit";
+    if (rowData.DK === "K") return "Kredit";
+    return "-";
+  };
+
+  // 🔹 Footer total saldo
   const footerGroup = (
     <ColumnGroup>
       <Row>
         <Column
           footer={
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', fontWeight: 'bold' }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+                fontWeight: "bold",
+              }}
+            >
               <span>
-                Total Saldo Debit: {totalDebit.toLocaleString('id-ID', {
-                  style: 'currency',
-                  currency: 'IDR',
+                Total Saldo Debit:{" "}
+                {totalDebit.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
                 })}
               </span>
               <span>
-                Total Saldo Kredit: {totalKredit.toLocaleString('id-ID', {
-                  style: 'currency',
-                  currency: 'IDR',
+                Total Saldo Kredit:{" "}
+                {totalKredit.toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
                 })}
               </span>
             </div>
@@ -91,7 +107,7 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
       paginatorLeft={paginatorLeft}
       paginatorRight={paginatorRight}
       footerColumnGroup={footerGroup}
-      sortField="updated_at" 
+      sortField="updated_at"
       sortOrder={-1}
     >
       <Column field="Tgl" header="Tanggal" body={dateTemplate} />
@@ -100,7 +116,7 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
       <Column field="UserName" header="Username" />
       <Column field="Nama" header="Nama" />
       <Column field="Alamat" header="Alamat" />
-      <Column field="DK" header="Debit/Kredit" />
+      <Column field="DK" header="Debit/Kredit" body={dkTemplate} />
       <Column field="Nominal" header="Nominal" body={rupiahTemplate} />
     </DataTable>
   );

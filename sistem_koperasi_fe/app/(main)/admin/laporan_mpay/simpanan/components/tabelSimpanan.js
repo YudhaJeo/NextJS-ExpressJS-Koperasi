@@ -36,36 +36,28 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalMutasi }) => {
   const dateTemplate = (rowData) => {
     if (!rowData.Tgl) return "-";
     const date = new Date(rowData.Tgl);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    if (isNaN(date)) return "-";
+    return date.toISOString().split("T")[0];
   };
 
   const rupiahTemplate = (rowData) => {
-    if (rowData.Jumlah == null) return '-';
-    const formatted = rowData.Jumlah.toLocaleString('id-ID', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-    return `Rp. ${formatted}`;
+    if (rowData.Jumlah == null) return "-";
+    const formatted = Number(rowData.Jumlah).toLocaleString("id-ID");
+    return `Rp ${formatted}`;
   };
 
-   const footerGroup = (
-  <ColumnGroup>
-    <Row>
-      <Column footer="" colSpan={4} /> {}
-      <Column footer="Total Mutasi" style={{ fontWeight: "bold", textAlign: "right" }} />
-      <Column
-        footer={totalMutasi.toLocaleString("id-ID", {
-          style: "currency",
-          currency: "IDR",
-        })}
-        style={{ fontWeight: "bold", textAlign: "left" }}
-      />
-    </Row>
-  </ColumnGroup>
-);
+  const footerGroup = (
+    <ColumnGroup>
+      <Row>
+        <Column footer="" colSpan={4} /> { }
+        <Column footer="Total Mutasi" style={{ fontWeight: "bold", textAlign: "right" }} />
+        <Column
+          footer={`Rp ${totalMutasi.toLocaleString("id-ID")}`}
+          style={{ fontWeight: "bold", textAlign: "left" }}
+        />
+      </Row>
+    </ColumnGroup>
+  );
 
   return (
     <DataTable
@@ -80,7 +72,7 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalMutasi }) => {
       paginatorLeft={paginatorLeft}
       paginatorRight={paginatorRight}
       footerColumnGroup={footerGroup}
-      sortField="updated_at" 
+      sortField="updated_at"
       sortOrder={-1}
     >
       <Column field="Tgl" header="Tanggal" body={dateTemplate} />

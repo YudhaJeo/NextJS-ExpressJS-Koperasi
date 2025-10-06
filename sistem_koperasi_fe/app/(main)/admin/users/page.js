@@ -123,7 +123,7 @@ const UsersPage = () => {
       password: '',
       role_id: row.role_id ?? '', 
       kode_perusahaan: row.kode_perusahaan ?? '',
-      status: row.status === 1 ? 1 : 2 // Pastikan status sesuai dengan dropdown di formDialog
+      status: row.status === 1 ? 1 : 2 
     });
     setDialogVisible(true);
   };
@@ -186,6 +186,7 @@ const UsersPage = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onRefresh={fetchData}
+        onPrint={() => setAdjustDialog(true)}
       />
 
       <FormDialogUser

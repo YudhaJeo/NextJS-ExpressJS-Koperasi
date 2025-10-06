@@ -52,7 +52,7 @@ export default function AdjustPrintMarginLaporan({
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 5, { align: 'center' });
+    doc.text('Koperasi', pageWidth / 2, marginTop + 5, { align: 'center' });
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
@@ -83,7 +83,7 @@ export default function AdjustPrintMarginLaporan({
 
     return marginTop + 43;
   };
-  
+
   async function exportPDF(adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
@@ -94,20 +94,39 @@ export default function AdjustPrintMarginLaporan({
     const marginLeft = parseFloat(adjustConfig.marginLeft);
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
+    const pageWidth = doc.internal.pageSize.width;
 
-    const startY = addHeader(doc, 'Perusahaan', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'Laporan Simpanan', marginLeft, marginTop, marginRight);
+
+    const totalSetoran = data
+      .filter((item) => item.Faktur?.startsWith("MT"))
+      .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
+
+    const totalPenarikan = data
+      .filter((item) => item.Faktur?.startsWith("MP"))
+      .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
+
+    const totalMutasi = data.reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
     autoTable(doc, {
       startY: startY,
       head: [[
-        'ID', 
-        'Kode Perusahaan', 
-        'Nama Perusahaan'
+        'No',
+        'UserName',
+        'Tanggal',
+        'Faktur',
+        'Rekening',
+        'Mutasi',
       ]],
       body: data.map((item) => [
-        item.Id,
-        item.KodePerusahaan,
-        item.NamaPerusahaan,
+        item.ID,
+        item.UserName,
+        item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
+        item.Faktur,
+        item.Rekening,
+        item.Jumlah
+          ? `Rp ${item.Jumlah.toLocaleString('id-ID')}`
+          : '-',
       ]),
       margin: { left: marginLeft, right: marginRight },
       styles: { fontSize: 9, cellPadding: 2 },
@@ -115,14 +134,55 @@ export default function AdjustPrintMarginLaporan({
       alternateRowStyles: { fillColor: [248, 249, 250] },
     });
 
+    let finalY = doc.lastAutoTable.finalY || startY;
+
+    const rightX = pageWidth - marginRight;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+
+    doc.text(
+      `Total Setoran   : Rp ${totalSetoran.toLocaleString('id-ID')}`,
+      rightX,
+      finalY + 10,
+      { align: 'right' }
+    );
+    doc.text(
+      `Total Penarikan : Rp ${totalPenarikan.toLocaleString('id-ID')}`,
+      rightX,
+      finalY + 16,
+      { align: 'right' }
+    );
+    doc.text(
+      `Total Mutasi    : Rp ${totalMutasi.toLocaleString('id-ID')}`,
+      rightX,
+      finalY + 22,
+      { align: 'right' }
+    );
+
     return doc.output('datauristring');
   }
 
   const exportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data);
+    const exportData = data.map((item, idx) => ({
+      No: idx + 1,
+      UserName: item.UserName,
+      Tanggal: item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
+      Faktur: item.Faktur,
+      Rekening: item.Rekening,
+      Mutasi: item.Jumlah ? `Rp ${item.Jumlah.toLocaleString('id-ID')}` : '-',
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Perusahaan');
-    XLSX.writeFile(wb, 'Perusahaan.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Laporan Simpanan');
+
+    const colWidths = Object.keys(exportData[0] || {}).map((key) => ({
+      wch: Math.max(key.length + 5, 15),
+    }));
+    ws['!cols'] = colWidths;
+
+    XLSX.writeFile(wb, 'Laporan Simpanan.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -130,7 +190,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Perusahaan');
+      setFileName('Laporan Simpanan');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {
@@ -144,14 +204,14 @@ export default function AdjustPrintMarginLaporan({
         label="Export Excel"
         icon="pi pi-file-excel"
         severity="success"
-        className="p-button-outlined" 
+        className="p-button-outlined"
         onClick={exportExcel}
       />
       <Button
         label="Export PDF"
         icon="pi pi-file-pdf"
         severity="danger"
-        className="p-button-outlined" 
+        className="p-button-outlined"
         onClick={handleExportPdf}
         loading={loadingExport}
       />

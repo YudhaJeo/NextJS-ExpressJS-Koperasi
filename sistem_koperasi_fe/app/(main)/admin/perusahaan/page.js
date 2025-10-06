@@ -7,9 +7,6 @@ import TabelData from './components/tabelData';
 import FormDialog from './components/formDialog';
 import ToastNotifier from '../../../components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
-import { Dialog } from "primereact/dialog";
-import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -22,12 +19,6 @@ const Page = () => {
     NamaPerusahaan: '', 
   });
   const [errors, setErrors] = useState({});
-  const [adjustDialog, setAdjustDialog] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("../../../components/PDFViewer"), { ssr: false });
-
   const toastRef = useRef(null);
 
   useEffect(() => {
@@ -156,26 +147,6 @@ const Page = () => {
         setForm={setForm}
         errors={errors}
       />
-
-      <AdjustPrintMarginLaporan
-        adjustDialog={adjustDialog}
-        setAdjustDialog={setAdjustDialog}
-        selectedRow={null}
-        data={data}
-        setPdfUrl={setPdfUrl}
-        setFileName={setFileName}
-        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
-      />
-
-      <Dialog
-        visible={jsPdfPreviewOpen}
-        onHide={() => setJsPdfPreviewOpen(false)}
-        modal
-        style={{ width: "90vw", height: "90vh" }}
-        header="Preview PDF"
-      >
-        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
-      </Dialog>
     </div>
   );
 };

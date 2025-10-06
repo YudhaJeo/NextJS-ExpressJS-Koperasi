@@ -83,72 +83,108 @@ export default function AdjustPrintMarginLaporan({
 
     return marginTop + 43;
   };
-  
+
   async function exportPDF(adjustConfig) {
-  const doc = new jsPDF({
-    orientation: adjustConfig.orientation,
-    unit: 'mm',
-    format: adjustConfig.paperSize,
-  });
+    const doc = new jsPDF({
+      orientation: adjustConfig.orientation,
+      unit: 'mm',
+      format: adjustConfig.paperSize,
+    });
 
-  const marginLeft = parseFloat(adjustConfig.marginLeft);
-  const marginTop = parseFloat(adjustConfig.marginTop);
-  const marginRight = parseFloat(adjustConfig.marginRight);
+    const marginLeft = parseFloat(adjustConfig.marginLeft);
+    const marginTop = parseFloat(adjustConfig.marginTop);
+    const marginRight = parseFloat(adjustConfig.marginRight);
+    const pageWidth = doc.internal.pageSize.width;
 
-  const startY = addHeader(doc, 'Laporan Mbanking', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'Laporan Mbanking', marginLeft, marginTop, marginRight);
 
-  const totalDebit = data
-    .filter((item) => item.DK === 'D')
-    .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
+    const totalDebit = data
+      .filter((item) => item.DK === 'D')
+      .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
-  const totalKredit = data
-    .filter((item) => item.DK === 'K')
-    .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
+    const totalKredit = data
+      .filter((item) => item.DK === 'K')
+      .reduce((acc, item) => acc + (item.Jumlah || 0), 0);
 
-  autoTable(doc, {
-    startY: startY,
-    head: [[
-      'No',
-      'Nama',
-      'Tanggal',
-      'Faktur',
-      'Rekening',
-      'Debit/Kredit',
-      'Jumlah',
-    ]],
-    body: data.map((item, idx) => [
-      idx + 1,
-      item.UserName,
-      item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
-      item.Faktur,
-      item.Rekening,
-      item.DK,
-      item.Jumlah
-        ? item.Jumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
-        : '-',
-    ]),
-    foot: [[
-      { content: 'Total Saldo Debit', colSpan: 5, styles: { halign: 'right', fontStyle: 'bold' } },
-      { content: totalDebit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }), styles: { halign: 'right', fontStyle: 'bold' } },
-    ], [
-      { content: 'Total Saldo Kredit', colSpan: 5, styles: { halign: 'right', fontStyle: 'bold' } },
-      { content: totalKredit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }), styles: { halign: 'right', fontStyle: 'bold' } },
-    ]],
-    margin: { left: marginLeft, right: marginRight },
-    styles: { fontSize: 9, cellPadding: 2 },
-    headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-    alternateRowStyles: { fillColor: [248, 249, 250] },
-    footStyles: { fillColor: [230, 230, 230], textColor: 20, fontStyle: 'bold' },
-  });
+    const dkTemplate = (rowData) => {
+      if (rowData.DK === "D") return "Debit";
+      if (rowData.DK === "K") return "Kredit";
+      return "-";
+    };
 
-  return doc.output('datauristring');
-}
+    autoTable(doc, {
+      startY: startY,
+      head: [[
+        'No',
+        'Nama',
+        'Tanggal',
+        'Faktur',
+        'Rekening',
+        'Debit/Kredit',
+        'Jumlah',
+      ]],
+      body: data.map((item, idx) => [
+        idx + 1,
+        item.UserName,
+        item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
+        item.Faktur,
+        item.Rekening,
+        dkTemplate(item),
+        item.Jumlah
+          ? `Rp ${item.Jumlah.toLocaleString('id-ID')}`
+          : '-',
+      ]),
+      margin: { left: marginLeft, right: marginRight },
+      styles: { fontSize: 9, cellPadding: 2 },
+      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      alternateRowStyles: { fillColor: [248, 249, 250] },
+    });
 
+    const finalY = doc.lastAutoTable.finalY || startY;
+
+    const rightX = pageWidth - marginRight;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+
+    doc.text(
+      `Total Saldo Debit : Rp ${totalDebit.toLocaleString('id-ID')}`,
+      rightX,
+      finalY + 10,
+      { align: 'right' }
+    );
+
+    doc.text(
+      `Total Saldo Kredit: Rp ${totalKredit.toLocaleString('id-ID')}`,
+      rightX,
+      finalY + 16,
+      { align: 'right' }
+    );
+
+    return doc.output('datauristring');
+  }
 
   const exportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data);
+    const exportData = data.map((item, idx) => ({
+      No: idx + 1,
+      Nama: item.UserName,
+      Tanggal: item.Tgl ? new Date(item.Tgl).toLocaleDateString('id-ID') : '',
+      Faktur: item.Faktur,
+      Rekening: item.Rekening,
+      'Debit/Kredit':
+        item.DK === 'D' ? 'Debit' : item.DK === 'K' ? 'Kredit' : '-',
+      Jumlah: item.Jumlah ? `Rp ${item.Jumlah.toLocaleString('id-ID')}` : '-',
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Laporan Mbanking');
+
+    const colWidths = Object.keys(exportData[0] || {}).map((key) => ({
+      wch: Math.max(key.length + 2, 15),
+    }));
+    ws['!cols'] = colWidths;
+
     XLSX.writeFile(wb, 'Laporan Mbanking.xlsx');
   };
 
@@ -171,14 +207,14 @@ export default function AdjustPrintMarginLaporan({
         label="Export Excel"
         icon="pi pi-file-excel"
         severity="success"
-        className="p-button-outlined" 
+        className="p-button-outlined"
         onClick={exportExcel}
       />
       <Button
         label="Export PDF"
         icon="pi pi-file-pdf"
         severity="danger"
-        className="p-button-outlined" 
+        className="p-button-outlined"
         onClick={handleExportPdf}
         loading={loadingExport}
       />
