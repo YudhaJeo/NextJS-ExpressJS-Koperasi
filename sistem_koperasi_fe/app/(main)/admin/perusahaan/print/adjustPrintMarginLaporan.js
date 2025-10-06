@@ -52,7 +52,7 @@ export default function AdjustPrintMarginLaporan({
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 5, { align: 'center' });
+    doc.text('Koperasi', pageWidth / 2, marginTop + 5, { align: 'center' });
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
@@ -83,7 +83,7 @@ export default function AdjustPrintMarginLaporan({
 
     return marginTop + 43;
   };
-  
+
   async function exportPDF(adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
@@ -100,8 +100,8 @@ export default function AdjustPrintMarginLaporan({
     autoTable(doc, {
       startY: startY,
       head: [[
-        'ID', 
-        'Kode Perusahaan', 
+        'ID',
+        'Kode Perusahaan',
         'Nama Perusahaan'
       ]],
       body: data.map((item) => [
@@ -119,9 +119,16 @@ export default function AdjustPrintMarginLaporan({
   }
 
   const exportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data);
+    const exportData = data.map((item) => ({
+      ID: item.Id,
+      'Kode Perusahaan': item.KodePerusahaan,
+      'Nama Perusahaan': item.NamaPerusahaan,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Perusahaan');
+
     XLSX.writeFile(wb, 'Perusahaan.xlsx');
   };
 
@@ -144,14 +151,14 @@ export default function AdjustPrintMarginLaporan({
         label="Export Excel"
         icon="pi pi-file-excel"
         severity="success"
-        className="p-button-outlined" 
+        className="p-button-outlined"
         onClick={exportExcel}
       />
       <Button
         label="Export PDF"
         icon="pi pi-file-pdf"
         severity="danger"
-        className="p-button-outlined" 
+        className="p-button-outlined"
         onClick={handleExportPdf}
         loading={loadingExport}
       />
