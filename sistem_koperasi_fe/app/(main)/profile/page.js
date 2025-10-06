@@ -23,18 +23,15 @@ export default function ProfilePage() {
   const toast = useRef(null);
 
   useEffect(() => {
-    // Ambil name dan email dari cookie
-    const cookieUsername = Cookies.get('name');
+    const cookieUsername = Cookies.get('username');
     const cookieEmail = Cookies.get('email');
 
-    // Isi form dengan data dari cookie jika tersedia
     if (cookieUsername && cookieEmail) {
       setUserData({
         name: cookieUsername,
         email: cookieEmail
       });
     } else {
-      // Jika tidak ada data di cookie, ambil dari backend
       fetchUserProfile();
     }
   }, []);
@@ -43,11 +40,10 @@ export default function ProfilePage() {
     try {
       const response = await axios.get(`${API_URL}/profile`);
       const { id, name, email } = response.data.data;
-      
-      // Simpan data ke cookie
+
       Cookies.set('name', name, { expires: 7 });
       Cookies.set('email', email, { expires: 7 });
-      Cookies.set('user_id', id, { expires: 7 }); // simpan id ke cookie juga
+      Cookies.set('user_id', id, { expires: 7 });\
 
       setUserData({ id, name, email });
     } catch (error) {
@@ -88,12 +84,11 @@ export default function ProfilePage() {
 
     try {
       await axios.put(`${API_URL}/profile`, {
-        id: Cookies.get('id'), // fallback ke cookie jika id kosong
+        id: Cookies.get('id'),
         name: userData.name,
         email: userData.email
       });
 
-      // Update cookie dengan data baru
       Cookies.set('name', userData.name, { expires: 7 });
       Cookies.set('email', userData.email, { expires: 7 });
 
@@ -173,8 +168,7 @@ export default function ProfilePage() {
                       icon="pi pi-times"
                       onClick={() => {
                         setIsEditing(false);
-                        
-                        // Kembalikan data dari cookie
+
                         const cookieUsername = Cookies.get('name');
                         const cookieEmail = Cookies.get('email');
                         const cookieId = Cookies.get('user_id');
