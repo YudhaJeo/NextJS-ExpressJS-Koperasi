@@ -131,7 +131,7 @@ export default function AdjustPrintMarginLaporan({
         item.Rekening,
         dkTemplate(item),
         item.Jumlah
-          ? item.Jumlah.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+          ? `Rp ${item.Jumlah.toLocaleString('id-ID')}`
           : '-',
       ]),
       margin: { left: marginLeft, right: marginRight },
@@ -148,14 +148,14 @@ export default function AdjustPrintMarginLaporan({
     doc.setFont('helvetica', 'bold');
 
     doc.text(
-      `Total Saldo Debit : ${totalDebit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
+      `Total Saldo Debit : Rp ${totalDebit.toLocaleString('id-ID')}`,
       rightX,
       finalY + 10,
       { align: 'right' }
     );
 
     doc.text(
-      `Total Saldo Kredit: ${totalKredit.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}`,
+      `Total Saldo Kredit: Rp ${totalKredit.toLocaleString('id-ID')}`,
       rightX,
       finalY + 16,
       { align: 'right' }

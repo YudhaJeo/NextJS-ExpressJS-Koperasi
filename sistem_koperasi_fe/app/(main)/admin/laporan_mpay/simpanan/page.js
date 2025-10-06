@@ -105,18 +105,12 @@ const Page = () => {
       <div className="flex justify-content-between mb-2">
         <span className="font-semibold">
           Total Setoran:{" "}
-          {totalSetoran.toLocaleString("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          })}
+          Rp {totalSetoran.toLocaleString("id-ID")}
         </span>
 
         <span className="font-semibold">
           Total Penarikan:{" "}
-          {totalPenarikan.toLocaleString("id-ID", {
-            style: "currency",
-            currency: "IDR",
-          })}
+          Rp {totalPenarikan.toLocaleString("id-ID")}
         </span>
       </div>
 
