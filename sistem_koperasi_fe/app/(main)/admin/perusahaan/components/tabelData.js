@@ -5,33 +5,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
-const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
-
-  const paginatorLeft = (
-    <div className="flex gap-2">
-      <Button
-        icon="pi pi-refresh"
-        size="small"
-        severity="info"
-        onClick={onRefresh}
-        tooltip="Refresh Data"
-        className="p-button-outlined"
-      />
-    </div>
-  );
-
-  const paginatorRight = (
-    <div className="flex gap-2">
-      <Button
-        icon="pi pi-print"
-        size="small"
-        severity="warning"
-        onClick={onPrint}
-        tooltip="Cetak Data"
-        className="p-button-outlined"
-      />
-    </div>
-  );
+const TabelData = ({ data, loading, onEdit, onDelete }) => {
 
   return (
     <DataTable 
@@ -43,8 +17,6 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh, onPrint }) => {
       size="small"
       scrollable
       scrollHeight="400px"
-      paginatorLeft={paginatorLeft}
-      paginatorRight={paginatorRight}
       sortField="updated_at" 
       sortOrder={-1}
     >
