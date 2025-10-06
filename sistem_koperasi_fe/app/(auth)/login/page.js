@@ -129,7 +129,6 @@ function LoginPage() {
               className="w-full mt-2 p-3"
               onClick={handleLogin}
             />
-          </div>
         </div>
     );
 }
