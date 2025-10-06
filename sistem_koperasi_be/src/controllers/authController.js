@@ -2,6 +2,7 @@ import { findUserByEmail } from '../models/authModel.js';
 import { generateToken } from '../utils/jwt.js';
 import { loginSchema } from '../schemas/authSchema.js';
 import bcrypt from 'bcrypt';
+import db from '../core/config/knex.js';
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -13,13 +14,11 @@ export const login = async (req, res) => {
 
   try {
     const user = await findUserByEmail(email.trim());
-    
     if (!user) {
       return res.status(401).json({ error: 'Email belum terdaftar' });
     }
 
     const passwordMatch = await bcrypt.compare(password.trim(), user.password);
-
     if (!passwordMatch) {
       return res.status(401).json({ error: 'Password salah' });
     }
@@ -28,9 +27,12 @@ export const login = async (req, res) => {
       return res.status(403).json({ error: 'Akun Anda tidak aktif' });
     }
 
+    const roleData = await db('roles').where({ id: user.role_id }).first();
+
     const accessTokenPayload = {
       id: user.id,
       role_id: user.role_id,
+      role_name: roleData?.name || 'user',
       email: user.email,
       kode_perusahaan: user.kode_perusahaan
     };
@@ -42,7 +44,7 @@ export const login = async (req, res) => {
       name: user.name,
       email: user.email,
       role_id: user.role_id,
-      role_name: user.role_name,
+      role_name: roleData?.name || 'user',
       kode_perusahaan: user.kode_perusahaan,
       id: user.id,
       mode: user.mode || 'dark',
