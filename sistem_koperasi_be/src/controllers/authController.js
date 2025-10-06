@@ -39,11 +39,12 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       accessToken,
-      username: user.name,
+      name: user.name,
       email: user.email,
       role_id: user.role_id,
       role_name: user.role_name,
       kode_perusahaan: user.kode_perusahaan,
+      id: user.id,
       mode: user.mode || 'dark',
     });
 
