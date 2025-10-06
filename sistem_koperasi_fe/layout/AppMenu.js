@@ -7,11 +7,11 @@ import Cookies from "js-cookie";
 
 const AppMenu = () => {
   const { layoutConfig } = useContext(LayoutContext);
-  const role = Cookies.get("role");
+  const role_name = Cookies.get("role_name");
 
   let model = [];
 
-  if (role === "admin") {
+  if (role_name === "admin") {
     model = [
       {
         items: [
@@ -31,11 +31,11 @@ const AppMenu = () => {
           },
           { label: "Perusahaan", icon: "pi pi-fw pi-building-columns", to: "/admin/perusahaan" },
           { label: "Users", icon: "pi pi-fw pi-user", to: "/admin/users" },
-          { label: "Roles", icon: "pi pi-fw pi-users", to: "/admin/roles" },
+          { label: "Roles", icon: "pi pi-fw pi-users", to: "/admin/role_names" },
         ],
       },
     ];
-  } else if (role === "vendor") {
+  } else if (role_name === "vendor") {
     model = [
       {
         items: [
@@ -56,7 +56,7 @@ const AppMenu = () => {
         ],
       },
     ];
-  } else if (role === "user") {
+  } else if (role_name === "user") {
     model = [
       {
         items: [
