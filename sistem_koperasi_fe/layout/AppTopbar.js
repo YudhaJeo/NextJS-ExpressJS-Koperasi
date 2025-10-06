@@ -25,18 +25,18 @@ const AppTopbar = forwardRef((props, ref) => {
         topbarmenubutton: topbarmenubuttonRef.current,
     }));
 
-    const [username, setUsername] = useState("");
+    const [name, setUsername] = useState("");
     const [role, setRole] = useState("");
 
     useEffect(() => {
-        const name = Cookies.get("username");
+        const name = Cookies.get("name");
         if (name) setUsername(name);
 
         const roleData = Cookies.get("role_name");
         if (roleData) setRole(roleData);
     }, []);
 
-    const firstLetter = username ? username.charAt(0).toUpperCase() : "?";
+    const firstLetter = name ? name.charAt(0).toUpperCase() : "?";
 
     return (
         <div className="layout-topbar">
@@ -70,9 +70,9 @@ const AppTopbar = forwardRef((props, ref) => {
                 })}
             >
                 <div className="flex flex-wrap gap-3">
-                    <div className="text-right align-items-center pt-2">
+                    <div className="text-right align-items-center">
                         <div>
-                            <span className="text-base md:text-lg font-semibold">{username}</span>
+                            <span className="text-base md:text-lg font-semibold">{name}</span>
                         </div>
                         <div>
                             {role && (
@@ -83,7 +83,7 @@ const AppTopbar = forwardRef((props, ref) => {
                     <Link href="/profile">
                         <Avatar
                             label={firstLetter}
-                            size="xlarge"
+                            size="large"
                             shape="circle"
                         />
                     </Link>
