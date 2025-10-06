@@ -5,25 +5,12 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
-const TabelData = ({ data, loading, onDelete, onRefresh, onToggleStatus }) => {
+const TabelData = ({ data, loading, onDelete, onToggleStatus }) => {
 
   const formatDate = (dateString) => {
     if (!dateString || dateString === '1900-01-01') return '-';
     return new Date(dateString).toLocaleDateString('id-ID');
   };
-
-  const paginatorLeft = (
-    <div className="flex gap-2">
-      <Button
-        icon="pi pi-refresh"
-        size="small"
-        severity="info"
-        onClick={onRefresh}
-        tooltip="Refresh Data"
-        className="p-button-outlined"
-      />
-    </div>
-  );
 
   return (
     <DataTable
@@ -35,7 +22,6 @@ const TabelData = ({ data, loading, onDelete, onRefresh, onToggleStatus }) => {
       size="small"
       scrollable
       scrollHeight="400px"
-      paginatorLeft={paginatorLeft}
       sortField="updated_at" 
       sortOrder={-1}
     >
