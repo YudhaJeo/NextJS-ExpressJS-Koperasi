@@ -27,22 +27,16 @@ const AppTopbar = forwardRef((props, ref) => {
 
     const [username, setUsername] = useState("");
     const [role, setRole] = useState("");
-    const [profile, setProfile] = useState("");
 
     useEffect(() => {
         const name = Cookies.get("username");
         if (name) setUsername(name);
 
-        const roleData = Cookies.get("role");
+        const roleData = Cookies.get("role_name");
         if (roleData) setRole(roleData);
     }, []);
 
-    useEffect(() => {
-        const profileData = Cookies.get("profile");
-        if (profileData && profileData !== "null" && profileData !== "undefined") {
-            setProfile(profileData);
-        }
-    }, []);
+    const firstLetter = username ? username.charAt(0).toUpperCase() : "?";
 
     return (
         <div className="layout-topbar">
@@ -71,25 +65,30 @@ const AppTopbar = forwardRef((props, ref) => {
 
             <div
                 ref={topbarmenuRef}
-                className={classNames("layout-topbar-menu", {
+                className={classNames("layout-topbar-menu flex items-center gap-3", {
                     "layout-topbar-menu-mobile-active": layoutState.profileSidebarVisible,
                 })}
             >
-                <p className="text-base md:text-xl font-medium text-right flex flex-col">
-                    <span>{username}</span>
-                    {role && <span className="text-sm text-right text-gray-400">{role}</span>}
-                </p>
-
-                <Link href="/profile">
-                    <button type="button" className="p-link layout-topbar-button">
-                        <Avatar 
-                            icon="pi pi-user" 
-                            size="xlarge" 
+                <div className="flex flex-wrap gap-3">
+                    <div className="text-right align-items-center pt-2">
+                        <div>
+                            <span className="text-base md:text-lg font-semibold">{username}</span>
+                        </div>
+                        <div>
+                            {role && (
+                                <span className="text-sm text-gray-400">{role}</span>
+                            )}
+                        </div>
+                    </div>
+                    <Link href="/profile">
+                        <Avatar
+                            label={firstLetter}
+                            size="xlarge"
                             shape="circle"
                         />
-                        <span>Profile</span>
-                    </button>
-                </Link>
+                    </Link>
+                </div>
+
             </div>
         </div>
     );

@@ -1,10 +1,8 @@
 import React, { useContext } from "react";
 import AppMenuitem from "./AppMenuitem";
-import { LayoutContext } from "./context/layoutcontext";
 import { MenuProvider } from "./context/menucontext";
 
 const AppMenu = () => {
-  const { layoutConfig } = useContext(LayoutContext);
 
   const model = [
     {
@@ -26,7 +24,6 @@ const AppMenu = () => {
         { label: "Perusahaan", icon: "pi pi-fw pi-building-columns", to: "/admin/perusahaan" },
         { label: "Users", icon: "pi pi-fw pi-user", to: "/admin/users" },
         { label: "Roles", icon: "pi pi-fw pi-users", to: "/admin/roles" },
-        { label: "Profile", icon: "pi pi-fw pi-user-edit", to: "/admin/profile" },
       ],
     },
   ];

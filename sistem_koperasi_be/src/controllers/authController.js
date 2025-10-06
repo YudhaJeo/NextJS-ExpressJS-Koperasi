@@ -42,6 +42,7 @@ export const login = async (req, res) => {
       username: user.name,
       email: user.email,
       role_id: user.role_id,
+      role_name: user.role_name,
       kode_perusahaan: user.kode_perusahaan,
       mode: user.mode || 'dark',
     });
