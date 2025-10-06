@@ -42,11 +42,10 @@ function LoginPage() {
           const res = await axios.post(`${URL}/login`, { email, password });
 
           Cookies.set('accessToken', res.data.accessToken);
-          Cookies.set('username', res.data.username);
-          Cookies.set('role', res.data.role_id, { expires: 1 });
+          Cookies.set('name', res.data.name);
           Cookies.set('role_name', res.data.role_name, { expires: 1 });
           Cookies.set('email', res.data.email, { expires: 1 });
-          Cookies.set('kode_perusahaan', res.data.kode_perusahaan, { expires: 1 });
+          Cookies.set('id', res.data.id, { expires: 1 });
 
           switch (res.data.role_id) {
               case 1:

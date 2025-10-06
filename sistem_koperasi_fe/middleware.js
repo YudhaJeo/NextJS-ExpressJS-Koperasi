@@ -6,9 +6,6 @@ const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET);
 export async function middleware(request) {
   const path = request.nextUrl.pathname;
 
-  console.log('Middleware - Accessing Path:', path);
-  console.log('Middleware - Secret Key:', SECRET_KEY);
-
   if (path === "/login") {
     return NextResponse.next();
   }
