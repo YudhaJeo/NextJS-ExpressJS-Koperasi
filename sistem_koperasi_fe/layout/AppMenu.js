@@ -31,7 +31,7 @@ const AppMenu = () => {
           },
           { label: "Perusahaan", icon: "pi pi-fw pi-building-columns", to: "/admin/perusahaan" },
           { label: "Users", icon: "pi pi-fw pi-user", to: "/admin/users" },
-          { label: "Roles", icon: "pi pi-fw pi-users", to: "/admin/role_names" },
+          { label: "Roles", icon: "pi pi-fw pi-users", to: "/admin/roles" },
         ],
       },
     ];
