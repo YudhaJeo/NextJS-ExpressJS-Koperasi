@@ -109,7 +109,7 @@ const Page = () => {
 
       <HeaderBar
         title=""
-        placeholder="Cari nama atau kode"
+        placeholder="Cari Nama atau Kode Perusahaan"
         onSearch={(keyword) => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>

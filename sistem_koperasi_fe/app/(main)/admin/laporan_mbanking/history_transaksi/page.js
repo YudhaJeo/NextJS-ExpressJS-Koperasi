@@ -86,12 +86,11 @@ const Page = () => {
       />
       <HeaderBar
         title=""
-        placeholder="Cari nama, rekening, atau faktur"
+        placeholder="Cari Username atau Faktur"
         onSearch={(keyword) => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
-            item.Nama?.toLowerCase().includes(keyword.toLowerCase()) ||
-            item.Rekening?.toLowerCase().includes(keyword.toLowerCase()) ||
+            item.UserName?.toLowerCase().includes(keyword.toLowerCase()) ||
             item.Faktur?.toLowerCase().includes(keyword.toLowerCase())
           );
           setData(filtered);

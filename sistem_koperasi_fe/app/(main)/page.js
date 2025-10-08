@@ -65,18 +65,36 @@ export default function Dashboard() {
   }, []);
 
   const statusBody = (row) => {
-    if (!row.status) return <Tag severity="secondary" value="-" />;
+  if (row.status === null || row.status === undefined || row.status === '') {
+    return <Tag severity="secondary" value="Tidak Ada Status" />;
+  }
+
+  // Jika status berbentuk angka
+  if (typeof row.status === 'number') {
     switch (row.status) {
-      case 'Selesai':
-        return <Tag severity="success" value={row.status} />;
-      case 'Proses':
-        return <Tag severity="info" value={row.status} />;
-      case 'Batal':
-        return <Tag severity="danger" value={row.status} />;
+      case 1:
+        return <Tag severity="success" value="Aktif" />;
+      case 2:
+        return <Tag severity="danger" value="Tidak Aktif" />;
+      case 0:
       default:
-        return <Tag severity="secondary" value={row.status} />;
+        return <Tag severity="secondary" value="Tidak Ada Status" />;
     }
-  };
+  }
+
+  // Jika status berbentuk string
+  switch (row.status) {
+    case 'Selesai':
+      return <Tag severity="success" value={row.status} />;
+    case 'Proses':
+      return <Tag severity="info" value={row.status} />;
+    case 'Batal':
+      return <Tag severity="danger" value={row.status} />;
+    default:
+      return <Tag severity="secondary" value={row.status} />;
+  }
+};
+
 
   return (
     <div className="grid">
