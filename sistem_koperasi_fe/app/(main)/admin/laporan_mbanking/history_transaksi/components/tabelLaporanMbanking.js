@@ -33,7 +33,6 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
     </div>
   );
 
-  // 🔹 Format tanggal YYYY-MM-DD
   const dateTemplate = (rowData) => {
     if (!rowData.Tgl) return "-";
     const date = new Date(rowData.Tgl);
@@ -41,7 +40,6 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
     return date.toISOString().split("T")[0];
   };
 
-  // 🔹 Format rupiah tanpa desimal (,00)
   const rupiahTemplate = (rowData) => {
     if (rowData.Jumlah == null && rowData.Nominal == null) return "-";
     const value = rowData.Jumlah ?? rowData.Nominal;
@@ -49,14 +47,12 @@ const TabelSimpanan = ({ data, loading, onRefresh, onPrint, totalDebit, totalKre
     return `Rp ${formatted}`;
   };
 
-  // 🔹 Format kolom Debit/Kredit
   const dkTemplate = (rowData) => {
     if (rowData.DK === "D") return "Debit";
     if (rowData.DK === "K") return "Kredit";
     return "-";
   };
 
-  // 🔹 Footer total saldo
   const footerGroup = (
     <ColumnGroup>
       <Row>

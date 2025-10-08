@@ -69,7 +69,6 @@ export default function Dashboard() {
     return <Tag severity="secondary" value="Tidak Ada Status" />;
   }
 
-  // Jika status berbentuk angka
   if (typeof row.status === 'number') {
     switch (row.status) {
       case 1:
@@ -82,7 +81,6 @@ export default function Dashboard() {
     }
   }
 
-  // Jika status berbentuk string
   switch (row.status) {
     case 'Selesai':
       return <Tag severity="success" value={row.status} />;

@@ -20,7 +20,6 @@ export async function updateUser(req, res) {
       return res.status(400).json({ error: 'ID user wajib diisi' });
     }
 
-    // Validasi input
     if (!name || name.trim() === '') {
       return res.status(400).json({ error: 'Username wajib diisi' });
     }
@@ -29,7 +28,6 @@ export async function updateUser(req, res) {
       return res.status(400).json({ error: 'Email tidak valid' });
     }
 
-    // Cek keunikan name dan email
     const existingUser = await ProfileModel.checkUniqueUser(id, name, email);
     if (existingUser) {
       return res.status(400).json({ error: 'Username atau email sudah digunakan' });

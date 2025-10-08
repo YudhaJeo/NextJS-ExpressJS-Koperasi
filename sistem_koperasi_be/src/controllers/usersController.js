@@ -37,7 +37,7 @@ export async function createUser(req, res) {
       kode_perusahaan,
       mode,
       status,
-      role_id, // ambil dari body, opsional
+      role_id,  
     } = req.body;
 
     const existing = await Users.findByEmail(email);
@@ -53,9 +53,9 @@ export async function createUser(req, res) {
       password: hashedPassword,
       phonenumber,
       kode_perusahaan,
-      role_id: role_id || null, // kalau ga ada dikirim, null
+      role_id: role_id || null,  
       mode: mode || 'light',
-      status: status ?? 1, // default 1
+      status: status ?? 1, 
       created_at: new Date(),
       updated_at: new Date(),
     });
