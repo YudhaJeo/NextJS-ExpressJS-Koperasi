@@ -78,10 +78,10 @@ function LoginPage() {
                             className="mb-4"
                         />
                         <div className="text-900 text-2xl font-semibold mb-2">
-                            Welcome Back
+                            Selamat Datang
                         </div>
                         <span className="text-600 text-sm">
-                            Enter your credentials to continue
+                            Masukkan Email & Password Anda
                         </span>
                     </div>
 
@@ -96,7 +96,7 @@ function LoginPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full p-3"
-                                placeholder="you@example.com"
+                                placeholder="contoh@example.com"
                             />
                         </div>
 
@@ -109,14 +109,14 @@ function LoginPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 feedback={false}
-                                placeholder="Enter your password"
+                                placeholder="Masukkan Password Anda"
                                 className="w-full p-input-icon-right"  
                                 inputClassName="w-full p-3"
                             />
                         </div>
 
                         <Button
-                            label="Sign In"
+                            label="Login"
                             className="w-full mt-2 p-3"
                             onClick={handleLogin}
                         />

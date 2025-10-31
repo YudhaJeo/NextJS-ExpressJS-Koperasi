@@ -7,7 +7,7 @@ const AppFooter = () => {
     return (
         <div className="layout-footer">
             <span>
-                Copyright © {new Date().getFullYear()} {process.env.NEXT_PUBLIC_COMPANY_NAME}. All rights reserved.
+                Copyright © Koperasi {new Date().getFullYear()} {process.env.NEXT_PUBLIC_COMPANY_NAME}. All rights reserved.
             </span>
         </div>
     );
