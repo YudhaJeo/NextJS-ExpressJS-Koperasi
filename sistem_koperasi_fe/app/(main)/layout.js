@@ -1,21 +1,14 @@
-import Layout from '../../layout/layout';
-import { PrimeReactProvider } from 'primereact/api';
+"use client";
 
-export const metadata = {
-  title: 'Dashboard Koperasi',
-  icons: {
-    icon: '/layout/marstech-logo.png',
-  },
-};
+import dynamic from "next/dynamic";
+import { PrimeReactProvider } from "primereact/api";
+
+const Layout = dynamic(() => import("../../layout/layout"), { ssr: false });
 
 export default function AppLayout({ children }) {
   return (
-    <body>
-      <PrimeReactProvider>
-          <Layout>
-            {children}
-          </Layout>
-      </PrimeReactProvider>
-    </body>
+    <PrimeReactProvider>
+      <Layout>{children}</Layout>
+    </PrimeReactProvider>
   );
 }

@@ -8,6 +8,7 @@ import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const [cards, setCards] = useState([]);
@@ -22,6 +23,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const router = useRouter();
 
   const formatDate = (dateString) => {
     if (!dateString) return '-';
@@ -43,9 +45,7 @@ export default function Dashboard() {
         plugins: { legend: { position: 'bottom' } },
         responsive: true,
         maintainAspectRatio: false,
-        scales: {
-          y: { beginAtZero: true }
-        }
+        scales: { y: { beginAtZero: true } },
       });
 
       setUserData(data.tabelUser || []);
@@ -65,37 +65,37 @@ export default function Dashboard() {
   }, []);
 
   const statusBody = (row) => {
-  if (row.status === null || row.status === undefined || row.status === '') {
-    return <Tag severity="secondary" value="Tidak Ada Status" />;
-  }
-
-  if (typeof row.status === 'number') {
-    switch (row.status) {
-      case 1:
-        return <Tag severity="success" value="Aktif" />;
-      case 2:
-        return <Tag severity="danger" value="Tidak Aktif" />;
-      case 0:
-      default:
-        return <Tag severity="secondary" value="Tidak Ada Status" />;
+    if (row.status === null || row.status === undefined || row.status === '') {
+      return <Tag severity="secondary" value="Tidak Ada Status" />;
     }
-  }
 
-  switch (row.status) {
-    case 'Selesai':
-      return <Tag severity="success" value={row.status} />;
-    case 'Proses':
-      return <Tag severity="info" value={row.status} />;
-    case 'Batal':
-      return <Tag severity="danger" value={row.status} />;
-    default:
-      return <Tag severity="secondary" value={row.status} />;
-  }
-};
+    if (typeof row.status === 'number') {
+      switch (row.status) {
+        case 1:
+          return <Tag severity="success" value="Aktif" />;
+        case 2:
+          return <Tag severity="danger" value="Tidak Aktif" />;
+        case 0:
+        default:
+          return <Tag severity="secondary" value="Tidak Ada Status" />;
+      }
+    }
 
+    switch (row.status) {
+      case 'Selesai':
+        return <Tag severity="success" value={row.status} />;
+      case 'Proses':
+        return <Tag severity="info" value={row.status} />;
+      case 'Batal':
+        return <Tag severity="danger" value={row.status} />;
+      default:
+        return <Tag severity="secondary" value={row.status} />;
+    }
+  };
 
   return (
     <div className="grid">
+      {/* === Bagian Card Atas (ditambahkan tombol View) === */}
       {cards.map((c, i) => (
         <div key={i} className="col-12 md:col-3">
           <Card className="shadow-2 text-center" style={{ borderTop: `4px solid ${c.color}` }}>
@@ -103,11 +103,31 @@ export default function Dashboard() {
               <i className={`${c.icon} text-4xl mb-2`} style={{ color: c.color }}></i>
               <h2 className="m-0">{c.value}</h2>
               <span className="text-600">{c.title}</span>
+
+              {/* Tombol View */}
+              <Button
+                label="View"
+                icon="pi pi-arrow-right"
+                className="p-button-sm mt-3"
+                style={{
+                  backgroundColor: c.color,
+                  borderColor: c.color,
+                }}
+                onClick={() => {
+                  const title = c.title.toLowerCase();
+                  if (title.includes('user')) router.push('/admin/users');
+                  else if (title.includes('perusahaan')) router.push('/admin/perusahaan');
+                  else if (title.includes('mbanking')) router.push('/admin/aktivasi_mbanking');
+                  else if (title.includes('mpay')) router.push('/admin/aktivasi_mpay');
+                  else console.warn('Belum ada rute untuk:', c.title);
+                }}
+              />
             </div>
           </Card>
         </div>
       ))}
 
+      {/* === Statistik Aktivasi === */}
       <div className="col-12 md:col-6">
         <Card title="Statistik Aktivasi" className="mb-4">
           {chartAktivasi ? (
@@ -122,6 +142,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
+      {/* === Statistik Transaksi === */}
       <div className="col-12 md:col-6">
         <Card title="Statistik Transaksi" className="mb-4">
           {chartTransaksi ? (
@@ -136,6 +157,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
+      {/* === Data User Terbaru === */}
       <div className="col-12">
         <Card title="Data User Terbaru" subTitle="10 data terakhir">
           <DataTable
@@ -155,6 +177,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
+      {/* === Data Simpanan Terbaru === */}
       <div className="col-12">
         <Card title="Data Simpanan Terbaru" subTitle="10 data terakhir">
           <DataTable
@@ -183,6 +206,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
+      {/* === Data Mutasi Terakhir === */}
       <div className="col-12">
         <Card title="Data Mutasi Terakhir" subTitle="10 data terakhir">
           <DataTable
