@@ -159,16 +159,6 @@ const Page = () => {
             );
             setData(filtered);
           }}
-          onAddClick={() => {
-            setForm({ 
-              Nama: '', 
-              KodeAo: '', 
-              Cabang: '', 
-              Username: '', 
-              Status: 1 
-            });
-            setDialogVisible(true);
-          }}
         />
       </div>
 

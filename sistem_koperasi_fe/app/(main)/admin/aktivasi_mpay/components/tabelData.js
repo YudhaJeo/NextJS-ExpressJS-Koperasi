@@ -57,7 +57,7 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh }) => {
         className="max-w-10rem overflow-hidden text-overflow-ellipsis"
         />
       <Column 
-        field="DateTime" 
+        field="created_at" 
         header="Date Time" 
         body={(rowData) => formatDateTime(rowData.DateTime)}
       
