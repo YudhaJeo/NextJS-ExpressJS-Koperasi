@@ -148,6 +148,8 @@ const Page = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
+
+        {/* ✔ Tombol Tambah dimasukkan di sini */}
         <HeaderBar
           title=""
           placeholder="Cari nama atau username"
@@ -158,6 +160,16 @@ const Page = () => {
               item.Username.toLowerCase().includes(keyword.toLowerCase())
             );
             setData(filtered);
+          }}
+          onAddClick={() => {
+            setForm({
+              Nama: '',
+              KodeAo: '',
+              Cabang: '',
+              Username: '',
+              Status: 1
+            });
+            setDialogVisible(true);
           }}
         />
       </div>
@@ -188,7 +200,6 @@ const Page = () => {
         setForm={setForm}
         errors={errors}
       />
-
     </div>
   );
 };

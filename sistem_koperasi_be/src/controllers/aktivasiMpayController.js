@@ -10,6 +10,30 @@ export async function getAllAktivasiMpay(req, res) {
   }
 }
 
+export async function createAktivasiMpay(req, res) {
+  try {
+    const { Nama, KodeAo, Cabang, Username, Status } = req.body;
+
+    if (!Nama || !KodeAo || !Cabang || !Username) {
+      return res.status(400).json({ error: "Semua field wajib diisi" });
+    }
+
+    const newId = await AktivasiMpay.create({
+      Nama, 
+      KodeAo, 
+      Cabang, 
+      Username, 
+      Status,
+    });
+
+    res.json({ message: 'Data berhasil ditambahkan', id: newId });
+  } catch (err) {
+    console.error('Gagal create mpay:', err);
+    res.status(500).json({ error: err.message });
+  }
+}
+
+
 export async function updateAktivasiMpay(req, res) {
   try {
     const id = req.params.id;

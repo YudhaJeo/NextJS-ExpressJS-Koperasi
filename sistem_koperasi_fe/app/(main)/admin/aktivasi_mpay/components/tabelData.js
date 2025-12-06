@@ -59,7 +59,7 @@ const TabelData = ({ data, loading, onEdit, onDelete, onRefresh }) => {
       <Column 
         field="created_at" 
         header="Date Time" 
-        body={(rowData) => formatDateTime(rowData.DateTime)}
+        body={(rowData) => formatDateTime(rowData.created_at)}
       
       />
       <Column 
